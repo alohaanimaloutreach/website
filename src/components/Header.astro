@@ -1,0 +1,104 @@
+---
+/*
+  Logo is auto-discovered from /src/assets/logos/
+  Drop in a file named "logo" with any extension (.png, .svg, .jpg, .webp)
+  and it will appear automatically.
+*/
+const logoFiles = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/logos/logo-black.{png,svg,jpg,jpeg,webp}',
+  { eager: true }
+);
+const logoEntry = Object.values(logoFiles)[0];
+const logoSrc = logoEntry?.default.src;
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/our-mission', label: 'Our Mission' },
+  { href: '/success-stories', label: 'Success Stories' },
+  { href: '/get-involved', label: 'Get Involved' },
+  { href: 'https://store.alohaanimaloutreach.org', label: 'Shop' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 bg-white shadow-md">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-3">
+    <!-- Logo — drop logo.png/.svg/.jpg/.webp into /src/assets/logos/ -->
+    <a href="/" class="flex-shrink-0">
+      {logoSrc ? (
+        <img src={logoSrc} alt="Aloha Animal Outreach" class="h-20 w-auto" />
+      ) : (
+        <span class="text-white font-display font-bold text-lg">Aloha Animal Outreach</span>
+      )}
+    </a>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-8">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class:list={[
+            'text-sm font-medium transition-colors',
+            currentPath === link.href
+              ? 'text-primary'
+              : 'text-anchor hover:text-primary'
+          ]}
+          {...(link.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+
+    <!-- Donate Button + Mobile Toggle -->
+    <div class="flex items-center gap-4">
+      <a
+        href="/donate"
+        class="bg-accent text-anchor font-bold text-sm px-5 py-2 rounded-full hover:brightness-110 transition"
+      >
+        Donate
+      </a>
+
+      <!-- Mobile hamburger -->
+      <button
+        id="mobile-menu-btn"
+        class="md:hidden text-anchor"
+        aria-label="Open menu"
+        aria-expanded="false"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path id="hamburger-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-anchor border-t border-white/10 pb-4">
+    {navLinks.map(link => (
+      <a
+        href={link.href}
+        class:list={[
+          'block px-6 py-3 text-sm font-medium transition-colors',
+          currentPath === link.href
+            ? 'text-accent'
+            : 'text-white hover:text-accent'
+        ]}
+        {...(link.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      >
+        {link.label}
+      </a>
+    ))}
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    menu?.classList.toggle('hidden');
+  });
+</script>

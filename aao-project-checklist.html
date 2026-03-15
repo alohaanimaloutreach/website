@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAO Project Checklist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --olive:#6ea832;--night:#1c1708;--dark:#3a3210;--gold:#e8c84a;--sand:#f7f1e3;
+      --ember:#c45c2a;--white:#ffffff;--muted:#7a7060;--stripe:#f0ece1;--done-bg:#eef6e3;
+      --phase1:#6ea832;--phase2:#3a8a7a;--phase3:#c45c2a;--phase4:#7a5cb8;
+    }
+    body { font-family:'Figtree',sans-serif; background:var(--sand); color:var(--night); min-height:100vh; padding:2rem 1.5rem 4rem; }
+    .header { max-width:900px; margin:0 auto 2rem; }
+    .header-top { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+    .header h1 { font-family:'Fraunces',serif; font-size:2rem; font-weight:600; color:var(--night); line-height:1.2; }
+    .header h1 span { color:var(--olive); }
+    .header-meta { font-size:0.85rem; color:var(--muted); margin-top:0.4rem; }
+    .progress-wrap { text-align:right; min-width:140px; }
+    .progress-label { font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.35rem; }
+    .progress-bar { background:#ddd5c4; border-radius:99px; height:10px; overflow:hidden; width:140px; margin-left:auto; }
+    .progress-fill { background:var(--olive); height:100%; border-radius:99px; transition:width 0.4s ease; }
+    .progress-count { font-size:0.78rem; color:var(--muted); margin-top:0.3rem; }
+    .divider { border:none; border-top:2px solid var(--olive); margin:1.2rem 0 0; opacity:0.4; }
+    .note { background:var(--white); border-left:3px solid var(--gold); border-radius:0 6px 6px 0; padding:0.65rem 1rem; font-size:0.82rem; color:var(--muted); margin-top:1rem; }
+    .note strong { color:var(--night); }
+    .phase-nav { max-width:900px; margin:1.25rem auto 1.5rem; display:flex; gap:0.5rem; flex-wrap:wrap; }
+    .phase-pill { font-size:0.75rem; font-weight:700; padding:0.3rem 0.85rem; border-radius:99px; border:2px solid; cursor:pointer; transition:background 0.15s,color 0.15s; display:flex; align-items:center; gap:0.4rem; }
+    .phase-pill .pill-count { font-size:0.68rem; opacity:0.8; }
+    .phase-pill[data-phase="1"]{border-color:var(--phase1);color:var(--phase1);}
+    .phase-pill[data-phase="1"]:hover,.phase-pill[data-phase="1"].active{background:var(--phase1);color:var(--white);}
+    .phase-pill[data-phase="2"]{border-color:var(--phase2);color:var(--phase2);}
+    .phase-pill[data-phase="2"]:hover,.phase-pill[data-phase="2"].active{background:var(--phase2);color:var(--white);}
+    .phase-pill[data-phase="3"]{border-color:var(--phase3);color:var(--phase3);}
+    .phase-pill[data-phase="3"]:hover,.phase-pill[data-phase="3"].active{background:var(--phase3);color:var(--white);}
+    .phase-pill[data-phase="4"]{border-color:var(--phase4);color:var(--phase4);}
+    .phase-pill[data-phase="4"]:hover,.phase-pill[data-phase="4"].active{background:var(--phase4);color:var(--white);}
+    .phase-pill[data-phase="all"]{border-color:var(--muted);color:var(--muted);}
+    .phase-pill[data-phase="all"]:hover,.phase-pill[data-phase="all"].active{background:var(--night);color:var(--white);border-color:var(--night);}
+    .sections { max-width:900px; margin:0 auto; display:flex; flex-direction:column; gap:1.25rem; }
+    .section { background:var(--white); border-radius:10px; overflow:hidden; box-shadow:0 1px 4px rgba(28,23,8,0.08); border-left:4px solid var(--olive); }
+    .section[data-phase="1"]{border-left-color:var(--phase1);}
+    .section[data-phase="2"]{border-left-color:var(--phase2);}
+    .section[data-phase="3"]{border-left-color:var(--phase3);}
+    .section[data-phase="4"]{border-left-color:var(--phase4);}
+    .section.hidden { display:none; }
+    .section-header { background:var(--night); padding:0.75rem 1.2rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; cursor:pointer; user-select:none; }
+    .section-header:hover { background:var(--dark); }
+    .section-left { display:flex; align-items:center; gap:0.75rem; }
+    .phase-badge { font-size:0.65rem; font-weight:800; letter-spacing:0.06em; padding:0.15rem 0.5rem; border-radius:4px; text-transform:uppercase; flex-shrink:0; }
+    .section[data-phase="1"] .phase-badge{background:var(--phase1);color:var(--white);}
+    .section[data-phase="2"] .phase-badge{background:var(--phase2);color:var(--white);}
+    .section[data-phase="3"] .phase-badge{background:var(--phase3);color:var(--white);}
+    .section[data-phase="4"] .phase-badge{background:var(--phase4);color:var(--white);}
+    .section-title { font-family:'Fraunces',serif; font-size:0.95rem; font-weight:600; color:var(--white); }
+    .section-right { display:flex; align-items:center; gap:0.75rem; flex-shrink:0; }
+    .section-pill { font-size:0.72rem; font-weight:700; color:var(--night); background:var(--gold); border-radius:99px; padding:0.15rem 0.6rem; }
+    .chevron { color:rgba(255,255,255,0.5); font-size:0.8rem; transition:transform 0.2s; }
+    .section.collapsed .chevron { transform:rotate(-90deg); }
+    .task-list { padding:0.5rem 0; }
+    .section.collapsed .task-list { display:none; }
+    .task-item { display:flex; align-items:flex-start; gap:0.85rem; padding:0.65rem 1.2rem; border-bottom:1px solid #ede8dc; transition:background 0.15s; }
+    .task-item:last-child { border-bottom:none; }
+    .task-item:nth-child(even) { background:var(--stripe); }
+    .task-item:hover { background:#ece5d4; }
+    .task-item.is-done { background:var(--done-bg)!important; }
+    .task-item.is-done .task-text { text-decoration:line-through; opacity:0.55; }
+    .task-item.is-done .task-note { opacity:0.45; }
+    .task-item.is-done .task-tag { display:none; }
+    .task-item.is-done .dims-badge { display:none; }
+    .task-item.is-done .done-badge { display:inline-block; }
+    .done-badge { display:none; font-size:0.65rem; font-weight:700; padding:0.1rem 0.45rem; border-radius:4px; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; margin-top:2px; flex-shrink:0; background:#c8e8a0; color:#3a6010; }
+    .task-item.img-item { padding:0.45rem 1.2rem 0.45rem 2.5rem; }
+    .task-item.img-item .task-text { font-family:'JetBrains Mono',monospace; font-size:0.78rem; font-weight:500; }
+    .task-item.img-item .task-note { font-size:0.74rem; }
+    .img-group-header { display:flex; align-items:center; gap:0.6rem; padding:0.4rem 1.2rem 0.3rem; background:#f5f0e6; border-bottom:1px solid #ede8dc; }
+    .img-group-label { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); }
+    .img-group-path { font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:var(--olive); }
+    .img-section-divider { padding:0.4rem 1.2rem 0.1rem; background:#faf7f2; border-top:1px solid #ddd5c4; border-bottom:1px solid #ede8dc; }
+    .img-section-label { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); }
+    .check-wrap { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; min-width:22px; border:2px solid #c5ba9e; border-radius:5px; cursor:pointer; transition:border-color 0.15s,background 0.15s; margin-top:1px; }
+    .check-wrap:hover { border-color:var(--olive); }
+    .check-wrap.checked { background:var(--olive); border-color:var(--olive); }
+    .check-wrap svg { display:none; }
+    .check-wrap.checked svg { display:block; }
+    .check-wrap.sm { width:18px; height:18px; min-width:18px; border-radius:4px; }
+    .task-body { flex:1; min-width:0; }
+    .task-text { font-size:0.88rem; font-weight:500; color:var(--night); line-height:1.45; }
+    .task-note { font-size:0.78rem; color:var(--muted); margin-top:0.2rem; line-height:1.4; }
+    .task-note code { font-family:'JetBrains Mono',monospace; font-size:0.73rem; background:#e8ddd0; padding:0.05rem 0.3rem; border-radius:3px; color:var(--dark); }
+    .task-tag { font-size:0.65rem; font-weight:700; padding:0.1rem 0.45rem; border-radius:4px; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; margin-top:2px; flex-shrink:0; }
+    .tag-current{background:#fef3c7;color:#92400e;}
+    .tag-waiting{background:#e0e7ff;color:#3730a3;}
+    .tag-manual{background:#fce7f3;color:#9d174d;}
+    .tag-code{background:#d1fae5;color:#065f46;}
+    .tag-dns{background:#fee2e2;color:#991b1b;}
+    .tag-image{background:#e8ddd0;color:#5c4a2a;}
+    .tag-done-label{background:#c8e8a0;color:#3a6010;}
+    .dims-badge { font-family:'JetBrains Mono',monospace; font-size:0.65rem; background:#e8ddd0; color:var(--dark); padding:0.1rem 0.4rem; border-radius:3px; white-space:nowrap; flex-shrink:0; margin-top:2px; }
+    .actions { max-width:900px; margin:1.5rem auto 0; display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; }
+    .btn { font-family:'Figtree',sans-serif; font-size:0.82rem; font-weight:600; padding:0.45rem 1rem; border-radius:6px; border:none; cursor:pointer; transition:background 0.15s; }
+    .btn-primary{background:var(--olive);color:var(--white);}
+    .btn-primary:hover{background:var(--dark);}
+    .btn-outline{background:transparent;color:var(--muted);border:1px solid #c5ba9e;}
+    .btn-outline:hover{border-color:var(--ember);color:var(--ember);}
+    .saved-note{font-size:0.78rem;color:var(--olive);opacity:0;transition:opacity 0.3s;}
+    .saved-note.show{opacity:1;}
+    @media(max-width:600px){body{padding:1rem 0.75rem 3rem;}.header h1{font-size:1.4rem;}.task-item{gap:0.6rem;padding:0.6rem 0.9rem;}.task-item.img-item{padding:0.4rem 0.9rem 0.4rem 1.8rem;}}
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>AAO Project <span>Checklist</span></h1>
+      <p class="header-meta">alohaanimaloutreach.org &nbsp;·&nbsp; All four phases including image files.</p>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label">Overall Progress</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-count" id="progressCount">0 of 0 complete</div>
+    </div>
+  </div>
+  <hr class="divider">
+  <p class="note"><strong>Image files:</strong> Canva doesn't export .webp — export as PNG or JPEG at the listed dimensions and convert free at <strong>squoosh.app</strong>. Aim for under 200KB per image after compression. Logos and first 3 hero slides already done ✓</p>
+</div>
+
+<div class="phase-nav" id="phaseNav"></div>
+<div class="sections" id="sections"></div>
+
+<div class="actions">
+  <button class="btn btn-primary" onclick="saveProgress()">Save Progress</button>
+  <button class="btn btn-outline" onclick="resetAll()">Reset All</button>
+  <span class="saved-note" id="savedNote">✓ Saved</span>
+</div>
+
+<script>
+const PHASES = [
+  {
+    phase:1, title:"Finish the Astro Website",
+    tasks:[
+      {id:"p1-stripe-test",text:"Set up Stripe in test mode",note:"Create Stripe account with AAO email, complete bank activation",tag:"current"},
+      {id:"p1-stripe-np",text:"Apply for Stripe nonprofit rate",note:"Email nonprofit@stripe.com — include org name, EIN 87-1327369, 501(c)(3) letter. Rate: 2.2% + $0.30. Allow 5–10 days.",tag:"waiting"},
+      {id:"p1-stripe-live",text:"Switch Stripe to live mode after nonprofit approval",note:"Swap test keys for live keys in Netlify environment variables",tag:"waiting"},
+      {id:"p1-resend",text:"Set up Resend for newsletter signups",note:"Create account at resend.com, create an audience, copy API key + audience ID into .env",tag:"manual"},
+      {id:"p1-donate-test",text:"Test donation flow end to end",note:"One-time + monthly — confirm Stripe checkout, thank you page, and webhook fires",tag:"current"},
+      {id:"p1-mobile",text:"Mobile responsiveness pass",note:"Test on iPhone and Android — hero, nav, donate form, footer",tag:"code"},
+      {id:"p1-deploy",text:"Deploy to Netlify on a preview URL",note:"Push to GitHub, connect repo to Netlify, confirm preview URL is live",tag:"code"},
+    ],
+    imageGroups:[
+      {label:"Logos",path:"/src/assets/logos/",images:[
+        {id:"img-logo-black",filename:"logo-black.png",dims:"Any",fmt:"PNG",desc:"Primary logo — black version",done:true},
+        {id:"img-logo-white",filename:"logo-white.png",dims:"Any",fmt:"PNG",desc:"White version for dark backgrounds",done:true},
+        {id:"img-logo-color",filename:"logo-color.png",dims:"Any",fmt:"PNG",desc:"Full-color version",done:true},
+      ]},
+      {label:"Hero Slideshow",path:"/src/assets/hero-slides/",images:[
+        {id:"img-hero-01",filename:"01.jpg",dims:"1200×900",fmt:"JPG/PNG/WEBP",desc:"Hero slide 1 — lead image",done:true},
+        {id:"img-hero-02",filename:"02.png",dims:"1200×900",fmt:"JPG/PNG/WEBP",desc:"Hero slide 2",done:true},
+        {id:"img-hero-03",filename:"03.png",dims:"1200×900",fmt:"JPG/PNG/WEBP",desc:"Hero slide 3",done:true},
+        {id:"img-hero-04",filename:"04.jpg / …",dims:"1200×900",fmt:"JPG/PNG/WEBP",desc:"Additional slides — name sequentially",done:false},
+      ]},
+      {label:"Program Cards",path:"/public/images/programs/",images:[
+        {id:"img-prog-food",filename:"program-food.webp",dims:"800×600",fmt:"WEBP*",desc:"Food & supplies distribution photo"},
+        {id:"img-prog-out",filename:"program-outreach.webp",dims:"800×600",fmt:"WEBP*",desc:"Team outreach scene photo"},
+        {id:"img-prog-spay",filename:"program-spayneuter.webp",dims:"800×600",fmt:"WEBP*",desc:"Spay/neuter clinic photo"},
+        {id:"img-prog-rescue",filename:"program-rescue.webp",dims:"800×600",fmt:"WEBP*",desc:"Rescue & rehoming moment photo"},
+      ]},
+      {label:"Success Stories",path:"/public/images/success-stories/",images:[
+        {id:"img-dog-bodhi",filename:"dog-bodhi.webp",dims:"800×800",fmt:"WEBP*",desc:"Bodhi — featured dog (existing photo)"},
+        {id:"img-dog-02",filename:"dog-story-02.webp",dims:"800×800",fmt:"WEBP*",desc:"Story dog 2 — square crop"},
+        {id:"img-dog-03",filename:"dog-story-03.webp",dims:"800×800",fmt:"WEBP*",desc:"Story dog 3 — square crop"},
+        {id:"img-dog-04",filename:"dog-story-04.webp",dims:"800×800",fmt:"WEBP*",desc:"Story dog 4 — square crop"},
+        {id:"img-dog-05",filename:"dog-story-05.webp",dims:"800×800",fmt:"WEBP*",desc:"Story dog 5 — square crop"},
+        {id:"img-dog-06",filename:"dog-story-06.webp",dims:"800×800",fmt:"WEBP*",desc:"Story dog 6 — square crop"},
+      ]},
+      {label:"Mission Page",path:"/public/images/",images:[
+        {id:"img-mission-team",filename:"mission-team.webp",dims:"1200×800",fmt:"WEBP*",desc:"Team group photo"},
+        {id:"img-mission-out",filename:"mission-outreach.webp",dims:"1200×800",fmt:"WEBP*",desc:"Outreach in action photo"},
+      ]},
+      {label:"Outreach / Get Involved",path:"/public/images/outreach/",images:[
+        {id:"img-out-01",filename:"outreach-01.webp",dims:"900×700",fmt:"WEBP*",desc:"Foster section image"},
+        {id:"img-out-02",filename:"outreach-02.webp",dims:"900×700",fmt:"WEBP*",desc:"Volunteer section image"},
+      ]},
+      {label:"Social Sharing",path:"/public/images/",images:[
+        {id:"img-og",filename:"og-image.webp",dims:"1200×630",fmt:"WEBP*",desc:"Social share card — logo + tagline on photo"},
+      ]},
+    ]
+  },
+  {
+    phase:2, title:"WooCommerce Merch Store",
+    tasks:[
+      {id:"p2-subdomain",text:"Create store. subdomain on DreamHost",note:"DreamHost panel → Domains → Add Hosting → store.alohaanimaloutreach.org. SSL provisions automatically.",tag:"manual"},
+      {id:"p2-wp",text:"Install WordPress on the subdomain",note:"Use DreamHost one-click installer, pointed at store.alohaanimaloutreach.org",tag:"manual"},
+      {id:"p2-woo",text:"Install and configure WooCommerce",note:"Plugins → Add New → WooCommerce. Run setup wizard: US/Hawaii, USD, physical products.",tag:"manual"},
+      {id:"p2-printful",text:"Install Printful plugin and connect store",note:"Plugins → Add New → Printful for WooCommerce. Then Printful dashboard → Stores → Add Store → WooCommerce.",tag:"manual"},
+      {id:"p2-products",text:"Confirm products sync from Printful to WooCommerce",note:"Products created in Printful auto-sync. Check WooCommerce → Products to confirm.",tag:"manual"},
+      {id:"p2-storefront",text:"Install Storefront parent theme",note:"Appearance → Themes → Add New → search Storefront → Install (do not activate yet)",tag:"manual"},
+      {id:"p2-childtheme",text:"Upload and activate AAO child theme",note:"Upload aao-storefront-child.zip via Appearance → Themes → Add New → Upload Theme → Activate",tag:"manual"},
+      {id:"p2-logo",text:"Upload logo in WordPress customizer",note:"Appearance → Customize → Site Identity → upload logo.svg",tag:"manual"},
+      {id:"p2-purchase",text:"Test a purchase end to end",note:"Place a test order, confirm Printful receives it, confirm order email sends",tag:"manual"},
+    ]
+  },
+  {
+    phase:3, title:"DNS Migration",
+    tasks:[
+      {id:"p3-export",text:"Export old WordPress content",note:"WordPress admin → Tools → Export → All Content. Save the XML file.",tag:"dns"},
+      {id:"p3-screenshot",text:"Screenshot all existing pages for reference",note:"Capture Home, About, Donate, and any other live pages before cutover",tag:"dns"},
+      {id:"p3-verify",text:"Verify both new sites work on preview/staging URLs",note:"Astro site on Netlify preview URL + WooCommerce on store. subdomain — both fully tested",tag:"dns"},
+      {id:"p3-vercel-domain",text:"Add custom domain in Netlify",note:"Netlify dashboard → project → Settings → Domains → add alohaanimaloutreach.org. Netlify gives you the exact DNS values.",tag:"dns"},
+      {id:"p3-dns-main",text:"Update main domain DNS at registrar → Netlify",note:"Point A record or CNAME for alohaanimaloutreach.org to Netlify's provided values",tag:"dns"},
+      {id:"p3-dns-store",text:"Add store. subdomain A record → DreamHost IP",note:"Add A record for store pointing to your DreamHost server IP (find in DreamHost panel)",tag:"dns"},
+      {id:"p3-propagate",text:"Wait for DNS propagation",note:"Can be minutes to 48 hours. Use dnschecker.org to monitor.",tag:"waiting"},
+      {id:"p3-ssl",text:"Confirm SSL on both domains",note:"Both alohaanimaloutreach.org and store.alohaanimaloutreach.org should show padlock",tag:"dns"},
+      {id:"p3-fallback",text:"Keep old WordPress live on DreamHost for 2 weeks",note:"Do not delete or modify the old site until the new one is confirmed stable",tag:"waiting"},
+      {id:"p3-cleanup",text:"Decommission old WordPress site after 2-week window",note:"Once the Astro site is confirmed stable, the old WordPress install can be removed",tag:"waiting"},
+    ]
+  },
+  {
+    phase:4, title:"AAO Command Center App",
+    tasks:[
+      {id:"p4-supabase",text:"Create Supabase project for the Command Center",note:"supabase.com → New project. Set up DB, enable auth.",tag:"code"},
+      {id:"p4-schema",text:"Build database schema",note:"Tables: dogs, families, locations, medical_events, outreach, field_notes",tag:"code"},
+      {id:"p4-seed",text:"Seed with test data",note:"Add a handful of dogs, families, and locations so the UI has something to display",tag:"code"},
+      {id:"p4-auth",text:"Set up Supabase auth",note:"Email/password for internal team. Row-level security on all tables.",tag:"code"},
+      {id:"p4-scaffold",text:"Scaffold React + TypeScript + Tailwind project",note:"Vite or Create React App. Connect to Supabase. Set up routing.",tag:"code"},
+      {id:"p4-dashboard",text:"Build Dashboard page",note:"Key stats, overdue medical events, recent field notes",tag:"code"},
+      {id:"p4-dogs",text:"Build Dogs page",note:"List, search, sort. Dog profile with AAO-XXXXXX auto ID.",tag:"code"},
+      {id:"p4-families",text:"Build Families page",note:"Family profiles linked to dogs and locations",tag:"code"},
+      {id:"p4-locations",text:"Build Locations page",note:"Encampment/location profiles with linked families and dogs",tag:"code"},
+      {id:"p4-medical",text:"Build Medical Events page",note:"Overdue events surface with red badges. Filterable by dog.",tag:"code"},
+      {id:"p4-outreach",text:"Build Outreach page",note:"Log monthly outreach sessions. Link to dogs and families present.",tag:"code"},
+      {id:"p4-fieldnotes",text:"Build Field Notes drawer + full page",note:"Accessible from every page as slide-out overlay. Timestamped, tagged by dog/location.",tag:"code"},
+      {id:"p4-reports",text:"Build Reports page with CSV export",note:"Dogs by status, medical overdue, distribution history",tag:"code"},
+      {id:"p4-mobile",text:"Mobile polish — bottom tab bar",note:"On mobile, nav collapses to bottom tab bar: Dashboard, Dogs, Families, Outreach, Notes",tag:"code"},
+      {id:"p4-subdomain",text:"Deploy to app.alohaanimaloutreach.org",note:"Netlify deployment. Add subdomain DNS record at registrar → Netlify.",tag:"dns"},
+    ]
+  },
+];
+
+const TAG_LABELS={current:'In Progress',waiting:'Waiting',manual:'Manual Step',code:'Claude Code',dns:'DNS / Deploy'};
+const TAG_CLASSES={current:'tag-current',waiting:'tag-waiting',manual:'tag-manual',code:'tag-code',dns:'tag-dns'};
+
+function tagHTML(tag){if(!tag)return '';return `<span class="task-tag ${TAG_CLASSES[tag]||''}">${TAG_LABELS[tag]||tag}</span>`;}
+function svg(){return `<svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4.5L4.5 8L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
+
+function allIds(p){
+  const ids=p.tasks.map(t=>t.id);
+  if(p.imageGroups)p.imageGroups.forEach(g=>g.images.forEach(img=>ids.push(img.id)));
+  return ids;
+}
+function totalItems(){return PHASES.reduce((a,p)=>a+allIds(p).length,0);}
+
+const KEY='aao-combined-checklist';
+let checked={},collapsed={},activeFilter='all';
+
+function loadState(){try{const s=localStorage.getItem(KEY);if(s){const p=JSON.parse(s);checked=p.checked||{};collapsed=p.collapsed||{};}}catch(e){}}
+function saveState(){try{localStorage.setItem(KEY,JSON.stringify({checked,collapsed}));}catch(e){}}
+
+function saveProgress(){
+  saveState();
+  const n=document.getElementById('savedNote');
+  n.classList.add('show');setTimeout(()=>n.classList.remove('show'),2000);
+}
+
+function resetAll(){
+  if(!confirm('Reset all checkboxes? Pre-done items will be re-checked automatically.'))return;
+  checked={};
+  PHASES.forEach(p=>{if(p.imageGroups)p.imageGroups.forEach(g=>g.images.forEach(img=>{if(img.done)checked[img.id]=true;}));});
+  saveState();render();updateProgress();
+}
+
+function toggle(id){
+  checked[id]=!checked[id];saveState();
+  const item=document.querySelector(`.task-item[data-id="${id}"]`);
+  const wrap=document.querySelector(`.check-wrap[data-id="${id}"]`);
+  if(!item||!wrap)return;
+  item.classList.toggle('is-done',!!checked[id]);
+  wrap.classList.toggle('checked',!!checked[id]);
+  updateProgress();updateAllPills();
+}
+
+function toggleCollapse(idx){
+  const key='sec-'+idx;collapsed[key]=!collapsed[key];saveState();
+  document.querySelector(`.section[data-idx="${idx}"]`).classList.toggle('collapsed',!!collapsed[key]);
+}
+
+function setFilter(phase){
+  activeFilter=phase;
+  document.querySelectorAll('.phase-pill').forEach(p=>p.classList.toggle('active',p.dataset.phase===String(phase)));
+  document.querySelectorAll('.section').forEach(s=>s.classList.toggle('hidden',phase!=='all'&&s.dataset.phase!==String(phase)));
+}
+
+function updateProgress(){
+  const total=totalItems();
+  const done=Object.values(checked).filter(Boolean).length;
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressCount').textContent=`${done} of ${total} complete`;
+}
+
+function doneForPhase(p){return allIds(p).filter(id=>checked[id]).length;}
+
+function updateAllPills(){
+  PHASES.forEach((p,idx)=>{
+    const done=doneForPhase(p),total=allIds(p).length;
+    const pill=document.querySelector(`.section[data-idx="${idx}"] .section-pill`);
+    if(pill)pill.textContent=`${done}/${total}`;
+    const navPill=document.querySelector(`.phase-pill[data-phase="${p.phase}"] .pill-count`);
+    if(navPill)navPill.textContent=`${done}/${total}`;
+  });
+  const total=totalItems(),done=Object.values(checked).filter(Boolean).length;
+  const ap=document.querySelector('.phase-pill[data-phase="all"] .pill-count');
+  if(ap)ap.textContent=`${done}/${total}`;
+}
+
+function render(){
+  const nav=document.getElementById('phaseNav');
+  nav.innerHTML='';
+  const total=totalItems(),done=Object.values(checked).filter(Boolean).length;
+  const ap=document.createElement('div');
+  ap.className='phase-pill'+(activeFilter==='all'?' active':'');
+  ap.dataset.phase='all';
+  ap.innerHTML=`All Phases <span class="pill-count">${done}/${total}</span>`;
+  ap.onclick=()=>setFilter('all');
+  nav.appendChild(ap);
+
+  PHASES.forEach(p=>{
+    const d=doneForPhase(p),t=allIds(p).length;
+    const pill=document.createElement('div');
+    pill.className='phase-pill'+(activeFilter===p.phase?' active':'');
+    pill.dataset.phase=String(p.phase);
+    pill.innerHTML=`Phase ${p.phase} <span class="pill-count">${d}/${t}</span>`;
+    pill.onclick=()=>setFilter(p.phase);
+    nav.appendChild(pill);
+  });
+
+  const container=document.getElementById('sections');
+  container.innerHTML='';
+
+  PHASES.forEach((p,idx)=>{
+    const done=doneForPhase(p),total=allIds(p).length;
+    const colKey='sec-'+idx,isCollapsed=!!collapsed[colKey];
+    const isHidden=activeFilter!=='all'&&activeFilter!==p.phase;
+
+    let imgHTML='';
+    if(p.imageGroups){
+      imgHTML+=`<div class="img-section-divider"><span class="img-section-label">Image Files</span></div>`;
+      p.imageGroups.forEach(g=>{
+        imgHTML+=`<div class="img-group-header"><span class="img-group-label">${g.label}</span><span class="img-group-path">${g.path}</span></div>`;
+        g.images.forEach(img=>{
+          const isDone=!!checked[img.id];
+          imgHTML+=`<div class="task-item img-item${isDone?' is-done':''}" data-id="${img.id}">
+            <div class="check-wrap sm${isDone?' checked':''}" data-id="${img.id}" onclick="toggle('${img.id}')">${svg()}</div>
+            <div class="task-body">
+              <div class="task-text">${img.filename}</div>
+              <div class="task-note">${img.desc}</div>
+            </div>
+            <span class="dims-badge">${img.dims}</span>
+            ${img.done?'<span class="task-tag tag-done-label">Done</span>':`<span class="task-tag tag-image">${img.fmt}</span>`}
+            <span class="done-badge">Done</span>
+          </div>`;
+        });
+      });
+    }
+
+    const secEl=document.createElement('div');
+    secEl.className=`section${isCollapsed?' collapsed':''}${isHidden?' hidden':''}`;
+    secEl.dataset.phase=String(p.phase);
+    secEl.dataset.idx=String(idx);
+    secEl.innerHTML=`
+      <div class="section-header" onclick="toggleCollapse(${idx})">
+        <div class="section-left">
+          <span class="phase-badge">Phase ${p.phase}</span>
+          <span class="section-title">${p.title}</span>
+        </div>
+        <div class="section-right">
+          <span class="section-pill">${done}/${total}</span>
+          <span class="chevron">▾</span>
+        </div>
+      </div>
+      <div class="task-list">
+        ${p.tasks.map(task=>`
+          <div class="task-item${checked[task.id]?' is-done':''}" data-id="${task.id}">
+            <div class="check-wrap${checked[task.id]?' checked':''}" data-id="${task.id}" onclick="toggle('${task.id}')">${svg()}</div>
+            <div class="task-body">
+              <div class="task-text">${task.text}</div>
+              ${task.note?`<div class="task-note">${task.note.replace(/\`([^\`]+)\`/g,'<code>$1</code>')}</div>`:''}
+            </div>
+            ${tagHTML(task.tag)}
+            <span class="done-badge">Done</span>
+          </div>`).join('')}
+        ${imgHTML}
+      </div>`;
+    container.appendChild(secEl);
+  });
+}
+
+loadState();
+PHASES.forEach(p=>{if(p.imageGroups)p.imageGroups.forEach(g=>g.images.forEach(img=>{if(img.done&&checked[img.id]===undefined)checked[img.id]=true;}));});
+render();updateProgress();
+window.addEventListener('beforeunload',saveState);
+</script>
+</body>
+</html>

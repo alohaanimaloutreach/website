@@ -1,0 +1,46 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Thank You | Aloha Animal Outreach" description="Your donation has been received. Mahalo for supporting Honolulu's most vulnerable pets.">
+
+  <section class="py-24 md:py-32">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-8">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+      </div>
+      <h1 class="font-display text-4xl sm:text-5xl font-bold mb-6">Mahalo!</h1>
+      <p class="text-text-muted text-lg leading-relaxed mb-8">
+        Your generosity just made a real difference. Because of you, a dog in Honolulu will eat tonight, see a vet this month, or find a safe place to sleep. You've confirmed a receipt to your email.
+      </p>
+      <p class="text-text-muted mb-10">
+        Want to multiply your impact? Share this with a friend who cares about animals.
+      </p>
+
+      <!-- Social Share -->
+      <div class="flex gap-4 justify-center mb-12">
+        <a
+          href="https://www.facebook.com/sharer/sharer.php?u=https://alohaanimaloutreach.org/donate"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bg-primary text-white px-6 py-3 rounded-full font-semibold hover:brightness-110 transition"
+        >
+          Share on Facebook
+        </a>
+        <a
+          href="https://twitter.com/intent/tweet?text=I%20just%20donated%20to%20Aloha%20Animal%20Outreach%20to%20help%20pets%20in%20need%20across%20Honolulu.%20You%20can%20too%3A&url=https://alohaanimaloutreach.org/donate"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border-2 border-primary text-primary px-6 py-3 rounded-full font-semibold hover:bg-primary/5 transition"
+        >
+          Share on X
+        </a>
+      </div>
+
+      <a href="/" class="text-primary font-semibold hover:underline">
+        ← Back to home
+      </a>
+    </div>
+  </section>
+
+</Layout>

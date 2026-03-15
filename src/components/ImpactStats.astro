@@ -1,0 +1,59 @@
+---
+const stats = [
+  { value: 1000, suffix: '+', label: 'Animals Spayed/Neutered' },
+  { value: 6000, suffix: '+', label: 'Pounds of Dog Food Distributed Yearly' },
+  { value: 1200, suffix: '+', label: 'Vaccines Administered' },
+];
+---
+
+<section class="bg-anchor py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      {stats.map(stat => (
+        <div>
+          <span
+            class="block font-display text-5xl md:text-6xl font-bold text-accent counter"
+            data-target={stat.value}
+            data-suffix={stat.suffix || ''}
+          >
+            0
+          </span>
+          <span class="mt-2 block text-white/80 text-sm uppercase tracking-wider">
+            {stat.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  function animateCounters() {
+    const counters = document.querySelectorAll('.counter');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLElement;
+          const target = parseInt(el.dataset.target || '0', 10);
+          const suffix = el.dataset.suffix || '';
+          if (target === 0) {
+            el.textContent = '0';
+            return;
+          }
+          const duration = 2000;
+          const start = performance.now();
+          function step(now: number) {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(eased * target).toLocaleString() + suffix;
+            if (progress < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+          observer.unobserve(el);
+        }
+      });
+    }, { threshold: 0.3 });
+    counters.forEach(c => observer.observe(c));
+  }
+  animateCounters();
+</script>

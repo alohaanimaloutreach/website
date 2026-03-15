@@ -1,0 +1,153 @@
+---
+
+---
+
+<div class="max-w-lg mx-auto">
+  <form id="donation-form" class="bg-white rounded-2xl shadow-sm p-8">
+    <!-- Interval Toggle -->
+    <div class="flex bg-bg rounded-lg p-1 mb-8">
+      <button
+        type="button"
+        data-interval="monthly"
+        class="interval-btn flex-1 py-2 text-sm font-semibold rounded-md bg-primary text-white transition"
+      >
+        Monthly
+      </button>
+      <button
+        type="button"
+        data-interval="once"
+        class="interval-btn flex-1 py-2 text-sm font-semibold rounded-md text-text-muted transition"
+      >
+        One-Time
+      </button>
+    </div>
+
+    <!-- Preset Amounts -->
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <button type="button" data-amount="15" class="amount-btn border-2 border-bg rounded-lg py-3 text-center font-semibold hover:border-primary hover:text-primary transition">$15</button>
+      <button type="button" data-amount="30" class="amount-btn border-2 border-bg rounded-lg py-3 text-center font-semibold hover:border-primary hover:text-primary transition">$30</button>
+      <button type="button" data-amount="50" class="amount-btn border-2 border-bg rounded-lg py-3 text-center font-semibold hover:border-primary hover:text-primary transition">$50</button>
+      <button type="button" data-amount="100" class="amount-btn border-2 border-bg rounded-lg py-3 text-center font-semibold hover:border-primary hover:text-primary transition">$100</button>
+    </div>
+
+    <!-- Custom Amount -->
+    <div class="mb-8">
+      <label for="custom-amount" class="block text-sm text-text-muted mb-2">Or enter a custom amount</label>
+      <div class="relative">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted font-semibold">$</span>
+        <input
+          type="number"
+          id="custom-amount"
+          min="1"
+          placeholder="Other amount"
+          class="w-full pl-8 pr-4 py-3 border-2 border-bg rounded-lg focus:outline-none focus:border-primary transition"
+        />
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      id="donate-btn"
+      class="w-full bg-accent text-anchor font-bold py-4 rounded-lg text-lg hover:brightness-110 transition"
+    >
+      Donate $30
+    </button>
+
+    <p id="donation-error" class="mt-4 text-alert text-sm text-center hidden"></p>
+  </form>
+
+  <!-- Impact context -->
+  <div class="mt-8 space-y-3 text-sm text-text-muted">
+    <p><strong class="text-text">$15</strong> provides a week of nutritious meals for one dog</p>
+    <p><strong class="text-text">$30</strong> covers a month of flea prevention for one dog</p>
+    <p><strong class="text-text">$50</strong> funds a wellness exam and vaccines</p>
+    <p><strong class="text-text">$100</strong> sponsors a spay or neuter surgery</p>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('donation-form') as HTMLFormElement;
+  const amountBtns = document.querySelectorAll('.amount-btn');
+  const intervalBtns = document.querySelectorAll('.interval-btn');
+  const customInput = document.getElementById('custom-amount') as HTMLInputElement;
+  const donateBtn = document.getElementById('donate-btn') as HTMLButtonElement;
+  const errorMsg = document.getElementById('donation-error') as HTMLElement;
+
+  let selectedAmount = 30;
+  let selectedInterval: 'once' | 'monthly' = 'monthly';
+
+  function updateUI() {
+    amountBtns.forEach(btn => {
+      const val = parseInt((btn as HTMLElement).dataset.amount || '0');
+      if (val === selectedAmount) {
+        btn.classList.add('border-primary', 'text-primary', 'bg-primary/5');
+      } else {
+        btn.classList.remove('border-primary', 'text-primary', 'bg-primary/5');
+      }
+    });
+    const label = selectedInterval === 'monthly' ? `/mo` : '';
+    donateBtn.textContent = `Donate $${selectedAmount}${label}`;
+  }
+
+  amountBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedAmount = parseInt((btn as HTMLElement).dataset.amount || '30');
+      customInput.value = '';
+      updateUI();
+    });
+  });
+
+  customInput?.addEventListener('input', () => {
+    const val = parseInt(customInput.value);
+    if (val > 0) {
+      selectedAmount = val;
+      updateUI();
+    }
+  });
+
+  intervalBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedInterval = (btn as HTMLElement).dataset.interval as 'once' | 'monthly';
+      intervalBtns.forEach(b => {
+        if ((b as HTMLElement).dataset.interval === selectedInterval) {
+          b.classList.add('bg-primary', 'text-white');
+          b.classList.remove('text-text-muted');
+        } else {
+          b.classList.remove('bg-primary', 'text-white');
+          b.classList.add('text-text-muted');
+        }
+      });
+      updateUI();
+    });
+  });
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorMsg.classList.add('hidden');
+    donateBtn.disabled = true;
+    donateBtn.textContent = 'Processing...';
+
+    try {
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: selectedAmount, interval: selectedInterval }),
+      });
+      const json = await res.json();
+      if (json.url) {
+        window.location.href = json.url;
+      } else {
+        throw new Error(json.error || 'Failed to create checkout session');
+      }
+    } catch (err: any) {
+      errorMsg.textContent = err.message || 'Something went wrong. Please try again.';
+      errorMsg.classList.remove('hidden');
+      updateUI();
+      donateBtn.disabled = false;
+    }
+  });
+
+  // Initialize with $30 monthly selected
+  updateUI();
+</script>

@@ -1,0 +1,24 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  class?: string;
+  aspectRatio?: string;
+}
+
+const { src, alt, class: className = '', aspectRatio = '16/9' } = Astro.props;
+const filename = src.split('/').pop();
+---
+
+<div
+  class:list={['bg-[#e8ddd0] overflow-hidden', className]}
+  style={`aspect-ratio: ${aspectRatio};`}
+>
+  <img
+    src={src}
+    alt={alt}
+    class="w-full h-full object-cover"
+    loading="lazy"
+    onerror={`this.style.display='none';this.parentElement.innerHTML='<span class="flex items-center justify-center w-full h-full text-text-muted text-sm font-mono px-4 text-center">${filename}</span>'`}
+  />
+</div>

@@ -1,0 +1,458 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ImagePlaceholder from '../components/ImagePlaceholder.astro';
+import ProgramCard from '../components/ProgramCard.astro';
+import ImpactStats from '../components/ImpactStats.astro';
+import StoryCard from '../components/StoryCard.astro';
+import NewsletterForm from '../components/NewsletterForm.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Auto-discover all success stories — homepage shows 3 at a time, cycling
+const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const imgDir = path.join(process.cwd(), 'public/images/success-stories');
+const storyFiles = fs.readdirSync(imgDir)
+  .filter((f: string) => f.endsWith('.webp'))
+  .sort((a: string, b: string) => a.localeCompare(b));
+
+function parseFile(filename: string): { name: string; rescuedDate?: string } {
+  const base = filename.replace(/\.webp$/, '');
+  const dateMatch = base.match(/_(\d{4})-(\d{2})$/);
+  let rescuedDate: string | undefined;
+  let namePart = base;
+  if (dateMatch) {
+    const year = dateMatch[1];
+    const monthIndex = parseInt(dateMatch[2], 10) - 1;
+    rescuedDate = `${monthNames[monthIndex]} ${year}`;
+    namePart = base.replace(/_\d{4}-\d{2}$/, '');
+  }
+  const name = namePart
+    .replace(/^dog-/, '')
+    .replace(/-\d+$/, '')
+    .split('-')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+  return { name, rescuedDate };
+}
+
+const allStories = storyFiles.map((f: string) => ({
+  ...parseFile(f),
+  imageSrc: `/images/success-stories/${f}`,
+}));
+
+/*
+  Hero slides are auto-discovered from /src/assets/hero-slides/
+  Naming: 01.jpeg, 02.jpeg, 03.jpeg (number controls order)
+  Drop in a new numbered file and it appears automatically on next build.
+  Recommended size: 1200 x 900px (4:3 ratio)
+  Supported formats: .jpeg, .jpg, .png, .webp
+
+  To control how a slide is cropped, edit the slidePositions map below.
+  Values use CSS object-position syntax: "center center", "center top", "left 30%", etc.
+*/
+const slideFiles = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/hero-slides/*.{jpeg,jpg,png,webp}',
+  { eager: true }
+);
+
+// Fine-tune cropping per slide — key is the filename, value is CSS object-position
+const slidePositions: Record<string, string> = {
+  '01.jpg': 'center 15%',
+  '03.png': 'center 75%',
+};
+
+const slides = Object.entries(slideFiles)
+  .map(([path, mod]) => {
+    const filename = path.split('/').pop()!;
+    const num = parseInt(filename.match(/^(\d+)/)?.[1] || '0');
+    const position = slidePositions[filename] || 'center center';
+    return { src: mod.default.src, order: num, filename, position };
+  })
+  .sort((a, b) => a.order - b.order);
+
+const hasSlides = slides.length > 0;
+---
+
+<Layout title="Aloha Animal Outreach | Be Part of Their Journey">
+
+  <!-- Hero — Split layout with transformation carousel -->
+  <section class="bg-primary flex items-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+      <!-- Left: Copy -->
+      <div class="text-center lg:text-left">
+        <span class="text-accent text-sm font-semibold uppercase tracking-widest mb-6 block">Aloha Animal Outreach</span>
+        <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-2">
+          From Homeless to Home.
+        </h1>
+        <p class="text-white/70 text-xl sm:text-2xl md:text-3xl font-display italic mb-8">Be Part of Their Journey</p>
+        <p class="text-white/80 text-base md:text-lg max-w-xl mb-10 leading-relaxed">
+          Every pet deserves care, no matter where home is. We bring food, veterinary support, and rescue to animals living in Hawaiʻi's unhoused communities.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <a href="/donate" class="bg-accent text-anchor font-bold px-8 py-4 rounded-full text-lg hover:brightness-110 transition">
+            Donate Now
+          </a>
+          <a href="/our-mission" class="border-2 border-white/60 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition">
+            Learn How We Help
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Auto-discovered slideshow from /src/assets/hero-slides/ -->
+      <div class="relative w-4/5 mx-auto">
+        <div id="hero-carousel" class="relative overflow-hidden rounded-2xl">
+          <div class="carousel-slides relative" style="aspect-ratio: 3/4;">
+            {hasSlides ? (
+              slides.map((slide, i) => (
+                <div
+                  class="carousel-slide absolute inset-0 transition-opacity duration-700"
+                  style={`opacity: ${i === 0 ? 1 : 0};`}
+                  data-slide={i}
+                >
+                  <img
+                    src={slide.src}
+                    alt={`Slide ${slide.order}`}
+                    class="w-full h-full object-cover rounded-2xl"
+                    style={`object-position: ${slide.position};`}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                  />
+                </div>
+              ))
+            ) : (
+              <div class="bg-[#e8ddd0] w-full h-full flex flex-col items-center justify-center text-text-muted text-sm font-mono rounded-2xl absolute inset-0">
+                <span>Add slides to /src/assets/hero-slides/</span>
+                <span class="mt-1 text-xs">e.g. 01.jpeg, 02.jpeg, 03.jpeg</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {slides.length > 1 && (
+          <div class="mt-4 flex justify-center gap-2">
+            {slides.map((_, i) => (
+              <button
+                class:list={['hero-dot w-2.5 h-2.5 rounded-full transition-colors', i === 0 ? 'bg-accent' : 'bg-white/30']}
+                data-index={i}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.hero-dot');
+    const count = slides.length;
+    let current = 0;
+    let timer: ReturnType<typeof setInterval>;
+
+    function goTo(index: number) {
+      slides.forEach((s, i) => {
+        (s as HTMLElement).style.opacity = i === index ? '1' : '0';
+      });
+      dots.forEach((d, i) => {
+        d.classList.toggle('bg-accent', i === index);
+        d.classList.toggle('bg-white/30', i !== index);
+      });
+      current = index;
+    }
+
+    function startAutoplay() {
+      if (count < 2) return;
+      timer = setInterval(() => goTo((current + 1) % count), 4000);
+    }
+
+    dots.forEach(d => d.addEventListener('click', () => {
+      clearInterval(timer);
+      goTo(parseInt((d as HTMLElement).dataset.index || '0'));
+      startAutoplay();
+    }));
+
+    // Touch swipe support
+    const carousel = document.getElementById('hero-carousel');
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    carousel?.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      clearInterval(timer);
+    }, { passive: true });
+
+    carousel?.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          goTo((current + 1) % count);
+        } else {
+          goTo((current - 1 + count) % count);
+        }
+      }
+      startAutoplay();
+    }, { passive: true });
+
+    startAutoplay();
+  </script>
+
+  <!-- Programs -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-center mb-4">How We Help</h2>
+      <p class="text-text-muted text-center mb-12 max-w-2xl mx-auto">Every program exists because a pet needed something and no one else showed up.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <ProgramCard
+          title="Pet Food & Supplies"
+          description="We distribute thousands of pounds of dog food and essential supplies each year to pet owners who can't afford them."
+          imageSrc="/images/programs/program-food.webp"
+        />
+        <ProgramCard
+          title="Monthly Outreach"
+          description="Our volunteer teams visit encampments across Oʻahu every month, bringing food, vaccines, flea prevention, and emergency care to pets who'd otherwise go without."
+          imageSrc="/images/programs/program-outreach.webp"
+        />
+        <ProgramCard
+          title="Mobile Spay & Neuter"
+          description="Free spay and neuter clinics give pets healthier lives and give their owners one less impossible thing to worry about."
+          imageSrc="/images/programs/program-spayneuter.webp"
+        />
+        <ProgramCard
+          title="Rescue & Rehoming"
+          description="When an owner can no longer care for their pet, we make sure that dog doesn't lose everything at once. We find foster homes, and when the time is right, forever families."
+          imageSrc="/images/programs/program-rescue.webp"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact Stats -->
+  <ImpactStats />
+
+  <!-- Success Stories Preview — horizontal slider, 3 visible at a time -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-center mb-4">Stories That Start With You</h2>
+      <p class="text-text-muted text-center mb-12 max-w-2xl mx-auto">Every dog here found safety because someone like you decided to help.</p>
+      <div class="relative">
+        <!-- Prev / Next arrows -->
+        {allStories.length > 3 && (
+          <button id="stories-prev" class="hidden lg:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-md rounded-full items-center justify-center text-primary hover:bg-primary hover:text-white transition" aria-label="Previous stories">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button id="stories-next" class="hidden lg:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-md rounded-full items-center justify-center text-primary hover:bg-primary hover:text-white transition" aria-label="Next stories">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        )}
+        <!-- Slider track -->
+        <div class="overflow-hidden">
+          <div id="stories-track" class="flex transition-transform duration-500 ease-in-out" style="gap: 1.5rem;">
+            {allStories.map(story => (
+              <div class="stories-slide flex-shrink-0 w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]">
+                <StoryCard
+                  name={story.name}
+                  imageSrc={story.imageSrc}
+                  rescuedDate={story.rescuedDate}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {allStories.length > 3 && (
+        <div class="flex justify-center items-center gap-2 mt-8" id="stories-dots">
+          {Array.from({ length: Math.ceil(allStories.length / 3) }).map((_, i) => (
+            <button
+              class:list={['story-dot w-2.5 h-2.5 rounded-full transition-colors', i === 0 ? 'bg-primary' : 'bg-primary/25']}
+              data-index={i}
+              aria-label={`Story group ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+      <div class="text-center mt-10">
+        <a href="/success-stories" class="text-primary font-semibold hover:underline">
+          See all success stories →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Donate CTA Strip -->
+  <section class="bg-anchor py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-6">You Can Change a Life Today</h2>
+      <p class="text-white/80 text-lg mb-4">Your $30 feeds a dog for a month. Your $50 covers a wellness exam. Your $100 funds a spay or neuter surgery.</p>
+      <p class="text-white/60 text-sm mb-10">No overhead. No middleman. Just volunteers and the animals they love.</p>
+      <a href="/donate" class="bg-accent text-anchor font-bold px-10 py-4 rounded-full text-lg hover:brightness-110 transition inline-block">
+        Donate Now
+      </a>
+    </div>
+  </section>
+
+  <!-- Join the Mission -->
+  <section class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-center mb-12">Other Ways to Help</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="text-center p-8 bg-bg rounded-2xl">
+          <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          </div>
+          <h3 class="font-display text-xl font-semibold mb-3">Foster a Dog</h3>
+          <p class="text-text-muted text-sm mb-4">Open your home to a dog in transition. We cover all veterinary care, food, and supplies. You provide the love.</p>
+          <a href="/get-involved" class="text-primary font-semibold text-sm hover:underline">Learn about fostering →</a>
+        </div>
+        <div class="text-center p-8 bg-bg rounded-2xl">
+          <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <h3 class="font-display text-xl font-semibold mb-3">Volunteer</h3>
+          <p class="text-text-muted text-sm mb-4">Join our monthly outreach team, help with transport, or lend your skills remotely. Every pair of hands matters.</p>
+          <a href="/get-involved" class="text-primary font-semibold text-sm hover:underline">See volunteer roles →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <NewsletterForm />
+
+  <script>
+    // Infinite loop slider — cards slide continuously in a circle
+    const track = document.getElementById('stories-track') as HTMLElement;
+    const originalSlides = Array.from(document.querySelectorAll('.stories-slide'));
+    const prevBtn = document.getElementById('stories-prev');
+    const nextBtn = document.getElementById('stories-next');
+    const dots = document.querySelectorAll('.story-dot');
+    const total = originalSlides.length;
+    let timer: ReturnType<typeof setInterval>;
+    let isTransitioning = false;
+
+    function getVisible(): number {
+      const w = window.innerWidth;
+      if (w >= 1024) return 3;
+      if (w >= 640) return 2;
+      return 1;
+    }
+
+    // Clone enough slides at the end and start for seamless looping
+    const visible = getVisible();
+    const cloneCount = Math.max(visible, 3);
+
+    // Append clones of the first N slides to the end
+    for (let i = 0; i < cloneCount; i++) {
+      const clone = originalSlides[i % total].cloneNode(true) as HTMLElement;
+      clone.classList.add('stories-clone');
+      track.appendChild(clone);
+    }
+    // Prepend clones of the last N slides to the start
+    for (let i = 0; i < cloneCount; i++) {
+      const clone = originalSlides[total - 1 - (i % total)].cloneNode(true) as HTMLElement;
+      clone.classList.add('stories-clone');
+      track.insertBefore(clone, track.firstChild);
+    }
+
+    // currentIndex is relative to the track including prepended clones
+    // Real slide 0 starts at position cloneCount
+    let currentIndex = cloneCount;
+
+    function getSlideWidth(): number {
+      const slide = track.children[0] as HTMLElement;
+      return slide.offsetWidth + 24; // 24 = 1.5rem gap
+    }
+
+    function setPosition(index: number, animate: boolean) {
+      if (animate) {
+        track.style.transition = 'transform 500ms ease-in-out';
+      } else {
+        track.style.transition = 'none';
+      }
+      track.style.transform = `translateX(-${index * getSlideWidth()}px)`;
+      currentIndex = index;
+      updateDots();
+    }
+
+    function updateDots() {
+      // Map currentIndex back to real slide index
+      const realIndex = ((currentIndex - cloneCount) % total + total) % total;
+      const groupIndex = Math.floor(realIndex / getVisible());
+      dots.forEach((d, i) => {
+        d.classList.toggle('bg-primary', i === groupIndex);
+        d.classList.toggle('bg-primary/25', i !== groupIndex);
+      });
+    }
+
+    // Handle seamless jump after transition to clones
+    track.addEventListener('transitionend', () => {
+      isTransitioning = false;
+      // If we've slid into the appended clones, jump to the real start
+      if (currentIndex >= cloneCount + total) {
+        setPosition(currentIndex - total, false);
+      }
+      // If we've slid into the prepended clones, jump to the real end
+      if (currentIndex < cloneCount) {
+        setPosition(currentIndex + total, false);
+      }
+    });
+
+    function next() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      setPosition(currentIndex + 1, true);
+    }
+
+    function prev() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      setPosition(currentIndex - 1, true);
+    }
+
+    function startAutoplay() {
+      if (total <= getVisible()) return;
+      timer = setInterval(next, 5000);
+    }
+
+    function resetAutoplay() {
+      clearInterval(timer);
+      startAutoplay();
+    }
+
+    prevBtn?.addEventListener('click', () => { prev(); resetAutoplay(); });
+    nextBtn?.addEventListener('click', () => { next(); resetAutoplay(); });
+
+    dots.forEach(d => d.addEventListener('click', () => {
+      if (isTransitioning) return;
+      const gi = parseInt((d as HTMLElement).dataset.index || '0');
+      const targetReal = gi * getVisible();
+      const targetIndex = cloneCount + targetReal;
+      isTransitioning = true;
+      setPosition(targetIndex, true);
+      resetAutoplay();
+    }));
+
+    // Touch swipe
+    let touchStartX = 0;
+    track.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      clearInterval(timer);
+    }, { passive: true });
+
+    track.addEventListener('touchend', (e) => {
+      const diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) next(); else prev();
+      }
+      startAutoplay();
+    }, { passive: true });
+
+    // Recalculate on resize
+    window.addEventListener('resize', () => setPosition(currentIndex, false));
+
+    // Set initial position (no animation)
+    setPosition(cloneCount, false);
+    startAutoplay();
+  </script>
+
+</Layout>

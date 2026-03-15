@@ -1,0 +1,155 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StoryCard from '../components/StoryCard.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+/*
+  Success story cards are auto-discovered from /public/images/success-stories/
+  The dog's name and rescue date are derived from the filename:
+    dog-coco.webp            → "Coco" (no date)
+    dog-coco_2024-03.webp    → "Coco", "March 2024"
+    dog-luna-2_2023-11.webp  → "Luna" (second Luna), "November 2023"
+
+  To add a new story: drop a .webp image named dog-[name].webp into the folder.
+  To add a rescue date: include _YYYY-MM before .webp (e.g. dog-coco_2024-03.webp)
+  To rename: just rename the file — the card updates automatically on next build.
+*/
+const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+const imgDir = path.join(process.cwd(), 'public/images/success-stories');
+const files = fs.readdirSync(imgDir)
+  .filter((f: string) => f.endsWith('.webp'))
+  .sort((a: string, b: string) => a.localeCompare(b));
+
+function parseFile(filename: string): { name: string; rescuedDate?: string } {
+  const base = filename.replace(/\.webp$/, ''); // e.g. "dog-coco-2_2024-03"
+
+  // Extract optional date suffix after underscore
+  const dateMatch = base.match(/_(\d{4})-(\d{2})$/);
+  let rescuedDate: string | undefined;
+  let namePart = base;
+
+  if (dateMatch) {
+    const year = dateMatch[1];
+    const monthIndex = parseInt(dateMatch[2], 10) - 1;
+    rescuedDate = `${monthNames[monthIndex]} ${year}`;
+    namePart = base.replace(/_\d{4}-\d{2}$/, '');
+  }
+
+  const name = namePart
+    .replace(/^dog-/, '')         // strip "dog-" prefix
+    .replace(/-\d+$/, '')         // strip trailing number suffix (e.g. "-2")
+    .split('-')                   // split on hyphens
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+
+  return { name, rescuedDate };
+}
+
+const stories = files.map((f: string) => ({
+  ...parseFile(f),
+  imageSrc: `/images/success-stories/${f}`,
+}));
+---
+
+<Layout title="Success Stories | Aloha Animal Outreach" description="Meet the dogs whose lives changed because someone like you decided to help.">
+
+  <!-- Hero -->
+  <section class="bg-anchor py-24 md:py-32">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+        Every Dog Has a Story
+      </h1>
+      <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto">
+        These are the faces behind the mission. The dogs who went from homeless to home because of people like you.
+      </p>
+    </div>
+  </section>
+
+  <!-- Stories Grid -->
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {stories.map(story => (
+          <StoryCard
+            name={story.name}
+            imageSrc={story.imageSrc}
+            rescuedDate={story.rescuedDate}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Submit Your Story -->
+  <section class="py-20 bg-white">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">Share Your Success Story</h2>
+        <p class="text-text-muted text-lg">Adopted an AAO dog? We'd love to hear how they're doing in their forever home.</p>
+      </div>
+
+      <form name="success-story" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" class="space-y-5">
+        <input type="hidden" name="form-name" value="success-story" />
+        <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="story-your-name" class="block text-sm font-semibold mb-1">Your name</label>
+            <input type="text" id="story-your-name" name="your-name" required
+              class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
+          <div>
+            <label for="story-email" class="block text-sm font-semibold mb-1">Email</label>
+            <input type="email" id="story-email" name="email" required
+              class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="story-dog-name" class="block text-sm font-semibold mb-1">Dog's name</label>
+            <input type="text" id="story-dog-name" name="dog-name" required
+              class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
+          <div>
+            <label for="story-adoption-date" class="block text-sm font-semibold mb-1">Approximate adoption date</label>
+            <input type="month" id="story-adoption-date" name="adoption-date"
+              class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
+        </div>
+
+        <div>
+          <label for="story-text" class="block text-sm font-semibold mb-1">Your story</label>
+          <textarea id="story-text" name="story" rows="5" required placeholder="How is your pup doing? What's life like together?"
+            class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary resize-y"></textarea>
+        </div>
+
+        <div>
+          <label for="story-photo" class="block text-sm font-semibold mb-1">Photo <span class="text-text-muted font-normal">(optional)</span></label>
+          <input type="file" id="story-photo" name="photo" accept="image/*"
+            class="w-full text-sm text-text-muted file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 file:transition" />
+        </div>
+
+        <button type="submit"
+          class="bg-primary text-white font-bold px-8 py-3 rounded-full hover:brightness-110 transition">
+          Submit Your Story
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-display text-3xl md:text-4xl font-bold mb-6">You Can Write the Next Chapter</h2>
+      <p class="text-text-muted text-lg mb-10">Every dollar you give helps another dog find safety, healing, and a home.</p>
+      <a href="/donate" class="bg-accent text-anchor font-bold px-8 py-4 rounded-full text-lg hover:brightness-110 transition inline-block">
+        Donate Now
+      </a>
+    </div>
+  </section>
+
+</Layout>
+

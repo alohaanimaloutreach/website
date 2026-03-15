@@ -1,0 +1,29 @@
+---
+import ImagePlaceholder from './ImagePlaceholder.astro';
+
+interface Props {
+  name: string;
+  caption?: string;
+  imageSrc: string;
+  location?: string;
+  rescuedDate?: string;
+}
+
+const { name, caption, imageSrc, location, rescuedDate } = Astro.props;
+---
+
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+  <ImagePlaceholder src={imageSrc} alt={name} aspectRatio="1/1" class="group-hover:scale-[1.02] transition-transform duration-300" />
+  <div class="p-5">
+    <div class="flex items-center justify-between mb-1">
+      <h3 class="font-display text-lg font-semibold">{name}</h3>
+      {rescuedDate && (
+        <span class="text-xs text-text-muted italic">Rescued {rescuedDate}</span>
+      )}
+      {!rescuedDate && location && (
+        <span class="text-xs bg-bg text-text-muted px-2 py-1 rounded-full">{location}</span>
+      )}
+    </div>
+    {caption && <p class="text-text-muted text-sm">{caption}</p>}
+  </div>
+</div>

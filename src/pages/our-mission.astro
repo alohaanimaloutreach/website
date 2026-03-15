@@ -1,0 +1,126 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ImagePlaceholder from '../components/ImagePlaceholder.astro';
+import ImpactStats from '../components/ImpactStats.astro';
+---
+
+<Layout title="Our Mission | Aloha Animal Outreach" description="Learn why Aloha Animal Outreach exists and how we serve Honolulu's most vulnerable pets through food, veterinary care, and rescue support.">
+
+  <!-- Hero -->
+  <section class="bg-anchor py-24 md:py-32">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+        From Homeless to Home:<br />A Mission Rooted in Compassion
+      </h1>
+      <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto">
+        We believe every pet deserves care, regardless of their owner's circumstances.
+      </p>
+    </div>
+  </section>
+
+  <!-- Why We Exist -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="font-display text-3xl md:text-4xl font-bold mb-6">Why We Exist</h2>
+          <div class="space-y-4 text-text-muted leading-relaxed">
+            <p>
+              Hawaiʻi has one of the highest per-capita rates of houselessness in the United States. For thousands of people living on the streets, their pet is their family. Their protector, their companion, their reason to keep going.
+            </p>
+            <p>
+              But when you're struggling to survive, a vet visit is a luxury. Flea prevention, spay/neuter surgery, even a bag of dog food. These essentials become impossible to access.
+            </p>
+            <p>
+              Aloha Animal Outreach was founded to close that gap. We don't judge. We don't require proof of address or income. We show up where the need is, on the streets, in encampments, under tarps, and we bring food, medicine, and compassion.
+            </p>
+            <p>
+              Because no one should have to choose between keeping their pet and keeping their pet alive.
+            </p>
+          </div>
+        </div>
+        <ImagePlaceholder src="/images/mission-outreach.webp" alt="AAO team during community outreach" class="rounded-2xl" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Programs -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-center mb-4">Our Core Programs</h2>
+      <p class="text-text-muted text-center mb-12 max-w-2xl mx-auto">Four pillars of care that keep pets healthy and families together.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Community Outreach -->
+        <div class="bg-bg rounded-2xl p-8">
+          <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <h3 class="font-display text-xl font-semibold mb-3">Community Outreach</h3>
+          <p class="text-text-muted leading-relaxed">
+            Every month, our volunteer teams visit encampments and shelters across Oʻahu. We distribute food, flea/tick prevention, and basic medical supplies. Over time, we build the long-term trust that leads to bigger interventions like spay/neuter surgery and rehoming.
+          </p>
+        </div>
+
+        <!-- Spay & Neuter -->
+        <div class="bg-bg rounded-2xl p-8">
+          <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          </div>
+          <h3 class="font-display text-xl font-semibold mb-3">Spay & Neuter Clinics</h3>
+          <p class="text-text-muted leading-relaxed">
+            Overpopulation is the root of the crisis. Our free mobile spay/neuter clinics, run in partnership with local veterinarians, are the single most impactful thing we do. Every surgery prevents dozens of future animals from entering the cycle of homelessness.
+          </p>
+        </div>
+
+        <!-- Foster & Rehoming -->
+        <div class="bg-bg rounded-2xl p-8">
+          <div class="w-12 h-12 bg-accent/10 text-accent rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          </div>
+          <h3 class="font-display text-xl font-semibold mb-3">Foster & Rehoming Support</h3>
+          <p class="text-text-muted leading-relaxed">
+            When an owner can't keep their pet safe due to illness, relocation, or crisis, we provide a compassionate alternative. Our foster network gives dogs a temporary safe haven while we find them permanent, loving homes.
+          </p>
+        </div>
+
+        <!-- Education -->
+        <div class="bg-bg rounded-2xl p-8">
+          <div class="w-12 h-12 bg-accent/10 text-accent rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          </div>
+          <h3 class="font-display text-xl font-semibold mb-3">Education & Advocacy</h3>
+          <p class="text-text-muted leading-relaxed">
+            We educate pet owners on basic care, nutrition, and the importance of spay/neuter. We also advocate for systemic change so that vulnerable communities have better access to animal welfare resources.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Photo -->
+  <section class="py-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <ImagePlaceholder src="/images/mission-team.webp" alt="Aloha Animal Outreach team" class="rounded-2xl" />
+    </div>
+  </section>
+
+  <!-- Impact Stats -->
+  <ImpactStats />
+
+  <!-- Dual CTA -->
+  <section class="py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-display text-3xl md:text-4xl font-bold mb-6">Ready to Help?</h2>
+      <p class="text-text-muted text-lg mb-10">Whether you give your time or your dollars, you're giving an animal a chance.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/donate" class="bg-accent text-anchor font-bold px-8 py-4 rounded-full text-lg hover:brightness-110 transition">
+          Donate Now
+        </a>
+        <a href="/get-involved" class="bg-primary text-white font-bold px-8 py-4 rounded-full text-lg hover:brightness-110 transition">
+          Volunteer With Us
+        </a>
+      </div>
+    </div>
+  </section>
+
+</Layout>

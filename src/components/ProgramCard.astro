@@ -1,0 +1,19 @@
+---
+import ImagePlaceholder from './ImagePlaceholder.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  imageSrc: string;
+}
+
+const { title, description, imageSrc } = Astro.props;
+---
+
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+  <ImagePlaceholder src={imageSrc} alt={title} aspectRatio="4/3" />
+  <div class="p-6">
+    <h3 class="font-display text-xl font-semibold mb-2">{title}</h3>
+    <p class="text-text-muted text-sm leading-relaxed">{description}</p>
+  </div>
+</div>

@@ -1,0 +1,396 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Get Involved | Aloha Animal Outreach" description="Foster, volunteer, or donate supplies to help Honolulu's most vulnerable pets.">
+
+  <!-- Hero -->
+  <section class="bg-anchor py-24 md:py-32">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+        Your Time Changes Lives
+      </h1>
+      <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto">
+        Whether you open your home, lend your hands, or bring your expertise, there's a place for you in this mission.
+      </p>
+    </div>
+  </section>
+
+  <!-- Foster -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div>
+          <span class="text-primary font-semibold text-sm uppercase tracking-wider">Foster</span>
+          <h2 class="font-display text-3xl md:text-4xl font-bold mt-2 mb-6">Open Your Home, Save a Life</h2>
+          <div class="space-y-4 text-text-muted leading-relaxed">
+            <p>
+              Fostering is the bridge between the street and a forever home. When you foster, you give a dog the time and space they need to decompress, heal, and learn to trust again.
+            </p>
+            <p><strong class="text-text">What's involved:</strong></p>
+            <ul class="list-disc list-inside space-y-2">
+              <li>Provide a safe, loving environment for 2 to 8 weeks</li>
+              <li>We cover all veterinary care, food, and supplies</li>
+              <li>Ongoing support from our experienced foster coordinator</li>
+              <li>You set your availability. Foster when it works for you</li>
+            </ul>
+          </div>
+          <button class="inquiry-toggle inline-block mt-6 bg-primary text-white font-bold px-6 py-3 rounded-full hover:brightness-110 transition" data-form="foster-form">
+            Apply to Foster
+          </button>
+        </div>
+        <div class="bg-[#e8ddd0] rounded-2xl flex items-center justify-center text-text-muted text-sm font-mono" style="aspect-ratio: 4/3;">
+          <span>outreach-01.webp</span>
+        </div>
+      </div>
+
+      <!-- Foster Inquiry Form -->
+      <div id="foster-form" class="inquiry-form hidden mt-12 max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-sm border border-dark/10 p-8">
+          <h3 class="font-display text-xl font-semibold mb-6">Foster Inquiry</h3>
+          <form name="foster-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="space-y-5">
+            <input type="hidden" name="form-name" value="foster-inquiry" />
+            <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="foster-name" class="block text-sm font-semibold mb-1">Name</label>
+                <input type="text" id="foster-name" name="name" required
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <div>
+                <label for="foster-email" class="block text-sm font-semibold mb-1">Email</label>
+                <input type="email" id="foster-email" name="email" required
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="foster-phone" class="block text-sm font-semibold mb-1">Phone <span class="text-text-muted font-normal">(optional)</span></label>
+                <input type="tel" id="foster-phone" name="phone"
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <div>
+                <label for="foster-location" class="block text-sm font-semibold mb-1">Location / Area</label>
+                <input type="text" id="foster-location" name="location" placeholder="e.g. Kailua, Honolulu" required
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+            </div>
+
+            <div>
+              <label for="foster-living" class="block text-sm font-semibold mb-1">Living situation</label>
+              <select id="foster-living" name="living-situation" required
+                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="" disabled selected>Select one</option>
+                <option value="house-yard">House with yard</option>
+                <option value="house-no-yard">House without yard</option>
+                <option value="apartment">Apartment / Condo</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="foster-pets" class="block text-sm font-semibold mb-1">Do you have other pets?</label>
+              <input type="text" id="foster-pets" name="other-pets" placeholder="e.g. One cat, no dogs"
+                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+            </div>
+
+            <div>
+              <label for="foster-message" class="block text-sm font-semibold mb-1">Anything else you'd like us to know?</label>
+              <textarea id="foster-message" name="message" rows="3"
+                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary resize-y"></textarea>
+            </div>
+
+            <button type="submit"
+              class="bg-primary text-white font-bold px-8 py-3 rounded-full hover:brightness-110 transition">
+              Submit Foster Inquiry
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Volunteer -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div class="order-2 lg:order-1 bg-[#e8ddd0] rounded-2xl flex items-center justify-center text-text-muted text-sm font-mono" style="aspect-ratio: 4/3;">
+          <span>outreach-02.webp</span>
+        </div>
+        <div class="order-1 lg:order-2">
+          <span class="text-primary font-semibold text-sm uppercase tracking-wider">Volunteer</span>
+          <h2 class="font-display text-3xl md:text-4xl font-bold mt-2 mb-6">Show Up for the Animals</h2>
+          <div class="space-y-4 text-text-muted leading-relaxed">
+            <p>
+              Our outreach runs on volunteer power. Whether you can give one Saturday a month or want to take on a regular role, there's meaningful work waiting for you.
+            </p>
+            <p><strong class="text-text">Volunteer roles include:</strong></p>
+            <ul class="list-disc list-inside space-y-2">
+              <li>Monthly outreach team: food distribution and wellness checks</li>
+              <li>Transport: driving animals to and from vet appointments</li>
+              <li>Event support: fundraisers, adoption events, community clinics</li>
+              <li>Administrative: social media, data entry, donor outreach</li>
+            </ul>
+          </div>
+          <button class="inquiry-toggle inline-block mt-6 bg-primary text-white font-bold px-6 py-3 rounded-full hover:brightness-110 transition" data-form="volunteer-form">
+            Sign Up to Volunteer
+          </button>
+        </div>
+      </div>
+
+      <!-- Volunteer Inquiry Form -->
+      <div id="volunteer-form" class="inquiry-form hidden mt-12 max-w-2xl mx-auto">
+        <div class="bg-bg rounded-2xl shadow-sm border border-dark/10 p-8">
+          <h3 class="font-display text-xl font-semibold mb-6">Volunteer Inquiry</h3>
+          <form name="volunteer-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="space-y-5">
+            <input type="hidden" name="form-name" value="volunteer-inquiry" />
+            <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="volunteer-name" class="block text-sm font-semibold mb-1">Name</label>
+                <input type="text" id="volunteer-name" name="name" required
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <div>
+                <label for="volunteer-email" class="block text-sm font-semibold mb-1">Email</label>
+                <input type="email" id="volunteer-email" name="email" required
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+            </div>
+
+            <div>
+              <label for="volunteer-phone" class="block text-sm font-semibold mb-1">Phone <span class="text-text-muted font-normal">(optional)</span></label>
+              <input type="tel" id="volunteer-phone" name="phone"
+                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold mb-2">Areas of interest</label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" name="interests" value="outreach" class="rounded border-dark/15 text-primary focus:ring-primary" />
+                  Monthly outreach
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" name="interests" value="transport" class="rounded border-dark/15 text-primary focus:ring-primary" />
+                  Transport
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" name="interests" value="events" class="rounded border-dark/15 text-primary focus:ring-primary" />
+                  Event support
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" name="interests" value="admin" class="rounded border-dark/15 text-primary focus:ring-primary" />
+                  Administrative / Remote
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <label for="volunteer-availability" class="block text-sm font-semibold mb-1">Availability</label>
+              <input type="text" id="volunteer-availability" name="availability" placeholder="e.g. Weekends, one Saturday per month"
+                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+            </div>
+
+            <div>
+              <label for="volunteer-message" class="block text-sm font-semibold mb-1">Anything else you'd like us to know?</label>
+              <textarea id="volunteer-message" name="message" rows="3"
+                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary resize-y"></textarea>
+            </div>
+
+            <button type="submit"
+              class="bg-primary text-white font-bold px-8 py-3 rounded-full hover:brightness-110 transition">
+              Submit Volunteer Inquiry
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Visiting Veterinarian -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <span class="text-primary font-semibold text-sm uppercase tracking-wider">Veterinary Professionals</span>
+        <h2 class="font-display text-3xl md:text-4xl font-bold mt-2 mb-6">Visiting the Island? Lend Your Skills.</h2>
+        <p class="text-text-muted leading-relaxed mb-6">
+          If you're a veterinarian or vet tech visiting Hawaiʻi, we'd love to connect. Our community clinics always need skilled hands for spay/neuter surgeries, wellness exams, and emergency care. Even a single day of your time can change dozens of lives.
+        </p>
+        <button class="inquiry-toggle inline-block bg-primary text-white font-bold px-6 py-3 rounded-full hover:brightness-110 transition" data-form="vet-form">
+          Veterinarian Inquiry
+        </button>
+      </div>
+
+      <!-- Vet Inquiry Form -->
+      <div id="vet-form" class="inquiry-form hidden mt-12 max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-sm border border-dark/10 p-8">
+          <h3 class="font-display text-xl font-semibold mb-6">Veterinarian Inquiry</h3>
+          <form name="vet-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="space-y-5">
+            <input type="hidden" name="form-name" value="vet-inquiry" />
+            <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="vet-name" class="block text-sm font-semibold mb-1">Name</label>
+                <input type="text" id="vet-name" name="name" required
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <div>
+                <label for="vet-email" class="block text-sm font-semibold mb-1">Email</label>
+                <input type="email" id="vet-email" name="email" required
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="vet-phone" class="block text-sm font-semibold mb-1">Phone <span class="text-text-muted font-normal">(optional)</span></label>
+                <input type="tel" id="vet-phone" name="phone"
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <div>
+                <label for="vet-practice" class="block text-sm font-semibold mb-1">Practice / Affiliation</label>
+                <input type="text" id="vet-practice" name="practice"
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+            </div>
+
+            <div>
+              <label for="vet-dates" class="block text-sm font-semibold mb-1">Dates on island</label>
+              <input type="text" id="vet-dates" name="dates-on-island" placeholder="e.g. March 10–17, 2026"
+                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold mb-2">Areas you can help with</label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" name="vet-interests" value="spay-neuter" class="rounded border-dark/15 text-primary focus:ring-primary" />
+                  Spay / Neuter surgeries
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" name="vet-interests" value="wellness" class="rounded border-dark/15 text-primary focus:ring-primary" />
+                  Wellness exams
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" name="vet-interests" value="emergency" class="rounded border-dark/15 text-primary focus:ring-primary" />
+                  Emergency care
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" name="vet-interests" value="other" class="rounded border-dark/15 text-primary focus:ring-primary" />
+                  Other
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <label for="vet-message" class="block text-sm font-semibold mb-1">Anything else?</label>
+              <textarea id="vet-message" name="message" rows="3"
+                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary resize-y"></textarea>
+            </div>
+
+            <button type="submit"
+              class="bg-primary text-white font-bold px-8 py-3 rounded-full hover:brightness-110 transition">
+              Submit Veterinarian Inquiry
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Donate CTA Strip -->
+  <section class="bg-anchor py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-6">Can't Volunteer? You Can Still Help.</h2>
+      <p class="text-white/80 text-lg mb-10">A monthly gift of $30 feeds a dog for a month. Your $100 funds a spay or neuter surgery. Every dollar makes a difference.</p>
+      <a href="/donate" class="bg-accent text-anchor font-bold px-10 py-4 rounded-full text-lg hover:brightness-110 transition inline-block">
+        Donate Now
+      </a>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-20 bg-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+      <div class="space-y-6">
+        <details class="group bg-bg rounded-xl p-6">
+          <summary class="flex justify-between items-center cursor-pointer font-semibold">
+            Do I need experience to foster or volunteer?
+            <svg class="w-5 h-5 text-text-muted group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <p class="mt-4 text-text-muted leading-relaxed">
+            Not at all. We provide full training and ongoing mentorship for every foster and volunteer. All you need is compassion and a willingness to show up.
+          </p>
+        </details>
+        <details class="group bg-bg rounded-xl p-6">
+          <summary class="flex justify-between items-center cursor-pointer font-semibold">
+            What if I already have pets at home?
+            <svg class="w-5 h-5 text-text-muted group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <p class="mt-4 text-text-muted leading-relaxed">
+            Many of our fosters have resident pets. We carefully match foster dogs with homes where they'll thrive, and we always do a temperament assessment first.
+          </p>
+        </details>
+        <details class="group bg-bg rounded-xl p-6">
+          <summary class="flex justify-between items-center cursor-pointer font-semibold">
+            How much time does volunteering take?
+            <svg class="w-5 h-5 text-text-muted group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <p class="mt-4 text-text-muted leading-relaxed">
+            Totally up to you. Our outreach events are typically 3 to 4 hours on a weekend morning. Transport and admin tasks can be as flexible as your schedule allows.
+          </p>
+        </details>
+        <details class="group bg-bg rounded-xl p-6">
+          <summary class="flex justify-between items-center cursor-pointer font-semibold">
+            Can I volunteer if I don't live on Oʻahu?
+            <svg class="w-5 h-5 text-text-muted group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <p class="mt-4 text-text-muted leading-relaxed">
+            Yes! Remote volunteers help with social media, fundraising, grant writing, and donor communications. We also welcome visiting volunteers who are on island temporarily.
+          </p>
+        </details>
+        <details class="group bg-bg rounded-xl p-6">
+          <summary class="flex justify-between items-center cursor-pointer font-semibold">
+            Is there a minimum commitment for fostering?
+            <svg class="w-5 h-5 text-text-muted group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <p class="mt-4 text-text-muted leading-relaxed">
+            Most foster placements last 2 to 8 weeks, but we're flexible. We also offer short-term "sleepover" fosters for dogs who just need a break from the shelter environment.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+  // Toggle inquiry forms open/closed
+  document.querySelectorAll('.inquiry-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const formId = (btn as HTMLElement).dataset.form;
+      if (!formId) return;
+      const form = document.getElementById(formId);
+      if (!form) return;
+
+      // Close any other open forms
+      document.querySelectorAll('.inquiry-form').forEach(f => {
+        if (f.id !== formId) f.classList.add('hidden');
+      });
+
+      // Toggle this form
+      form.classList.toggle('hidden');
+
+      // Scroll to form if opening
+      if (!form.classList.contains('hidden')) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
