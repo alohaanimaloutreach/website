@@ -125,7 +125,7 @@
     </div>
   </div>
   <hr class="divider">
-  <p class="note"><strong>Image files:</strong> Canva doesn't export .webp — export as PNG or JPEG at the listed dimensions and convert free at <strong>squoosh.app</strong>. Aim for under 200KB per image after compression. Logos and first 3 hero slides already done ✓</p>
+  <p class="note"><strong>Image files:</strong> Export from Canva as PNG, then convert to WebP via <strong>cwebp</strong> (installed via Homebrew): <code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;background:#e8ddd0;padding:0.05rem 0.3rem;border-radius:3px;">cwebp -q 80 input.png -o output.webp</code>. Aim for under 200KB per image. Logos, hero slides, program cards, and 36+ success stories already done ✓</p>
 </div>
 
 <div class="phase-nav" id="phaseNav"></div>
@@ -142,13 +142,27 @@ const PHASES = [
   {
     phase:1, title:"Finish the Astro Website",
     tasks:[
-      {id:"p1-stripe-test",text:"Set up Stripe in test mode",note:"Create Stripe account with AAO email, complete bank activation",tag:"current"},
+      {id:"p1-stripe-test",text:"Set up Stripe in test mode",note:"Stripe account created with AAO email, test API keys configured in .env",done:true},
+      {id:"p1-resend",text:"Set up Resend for newsletter signups",note:"Account created at resend.com, audience created, API key + audience ID in .env",done:true},
+      {id:"p1-donate-test",text:"Test donation flow end to end (test mode)",note:"One-time + monthly confirmed in Stripe dashboard, thank you page and webhook working",done:true},
+      {id:"p1-mobile",text:"Mobile responsiveness pass",note:"Tested on real device — hero, nav, donate form, footer all good",done:true},
+      {id:"p1-deploy",text:"Deploy to Netlify on a preview URL",note:"GitHub repo connected to Netlify, auto-deploys on push to main",done:true},
+      {id:"p1-github",text:"Push to GitHub under AAO org",note:"Repo at github.com/alohaanimaloutreach/website — org owns it, shaunagits is collaborator",done:true},
+      {id:"p1-pages",text:"Build all website pages",note:"Home, Our Mission, Success Stories, Get Involved, Donate (+ thank-you) — all complete",done:true},
+      {id:"p1-forms",text:"Set up Netlify Forms",note:"5 forms built: Foster, Volunteer, Veterinarian, Success Story Submission, Contact (unplaced)",done:true},
+      {id:"p1-donate-enhance",text:"Donation page enhancements",note:"Two-column layout with photo, social proof line, impact heading, $50 default, manage-giving pill button",done:true},
+      {id:"p1-hero-bg",text:"Add hero background images with overlay to all interior pages",note:"Our Mission, Success Stories, Get Involved, Donate — bg image + bg-anchor/80 overlay. Using placeholders, need real photos.",done:true},
+      {id:"p1-env",text:"Set Netlify environment variables",note:"Site settings → Environment variables: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `PUBLIC_SITE_URL` (https://alohaanimaloutreach.org), `RESEND_API_KEY`, `RESEND_AUDIENCE_ID`",tag:"current"},
       {id:"p1-stripe-np",text:"Apply for Stripe nonprofit rate",note:"Email nonprofit@stripe.com — include org name, EIN 87-1327369, 501(c)(3) letter. Rate: 2.2% + $0.30. Allow 5–10 days.",tag:"waiting"},
-      {id:"p1-stripe-live",text:"Switch Stripe to live mode after nonprofit approval",note:"Swap test keys for live keys in Netlify environment variables",tag:"waiting"},
-      {id:"p1-resend",text:"Set up Resend for newsletter signups",note:"Create account at resend.com, create an audience, copy API key + audience ID into .env",tag:"manual"},
-      {id:"p1-donate-test",text:"Test donation flow end to end",note:"One-time + monthly — confirm Stripe checkout, thank you page, and webhook fires",tag:"current"},
-      {id:"p1-mobile",text:"Mobile responsiveness pass",note:"Test on iPhone and Android — hero, nav, donate form, footer",tag:"code"},
-      {id:"p1-deploy",text:"Deploy to Netlify on a preview URL",note:"Push to GitHub, connect repo to Netlify, confirm preview URL is live",tag:"code"},
+      {id:"p1-stripe-live",text:"Switch Stripe to live mode",note:"After nonprofit approval, copy live API keys from Stripe dashboard into Netlify env vars (not the sk_test_ ones)",tag:"waiting"},
+      {id:"p1-stripe-webhook",text:"Add Stripe webhook endpoint for production",note:"Stripe dashboard → Webhooks → add https://alohaanimaloutreach.org/api/stripe-webhook — subscribe to checkout.session.completed, invoice.payment_succeeded, customer.subscription.deleted",tag:"waiting"},
+      {id:"p1-stripe-portal",text:"Enable Stripe customer billing portal",note:"Stripe dashboard → Settings → Billing → Customer portal. Needed for the 'Manage your giving' feature on the donate page.",tag:"waiting"},
+      {id:"p1-donate-live",text:"Test a real donation on the live site",note:"After Stripe is in live mode, make a small real donation ($1–$5 custom amount) to confirm full flow",tag:"waiting"},
+      {id:"p1-forms-notify",text:"Enable Netlify Forms email notifications",note:"Netlify dashboard → Forms → Form notifications → add email notification for each form",tag:"manual"},
+      {id:"p1-contact-place",text:"Decide where to place the Contact form",note:"Contact form component is built but not placed on any page yet — no /contact page created",tag:"current"},
+      {id:"p1-dog-rename",text:"Rename placeholder dog image files to actual names",note:"Files in /public/images/success-stories/ — rename dog-name-*.webp to real dog names",tag:"manual"},
+      {id:"p1-dog-dates",text:"Update rescue dates on success story images",note:"Add _YYYY-MM suffix to filenames for rescue date (e.g. dog-coco_2024-03.webp)",tag:"manual"},
+      {id:"p1-shop-cleanup",text:"Consider removing local /shop page",note:"Nav link points to external store.alohaanimaloutreach.org — local /shop page exists but is unlinked",tag:"current"},
     ],
     imageGroups:[
       {label:"Logos",path:"/src/assets/logos/",images:[
@@ -156,45 +170,41 @@ const PHASES = [
         {id:"img-logo-white",filename:"logo-white.png",dims:"Any",fmt:"PNG",desc:"White version for dark backgrounds",done:true},
         {id:"img-logo-color",filename:"logo-color.png",dims:"Any",fmt:"PNG",desc:"Full-color version",done:true},
       ]},
-      {label:"Hero Slideshow",path:"/src/assets/hero-slides/",images:[
-        {id:"img-hero-01",filename:"01.jpg",dims:"1200×900",fmt:"JPG/PNG/WEBP",desc:"Hero slide 1 — lead image",done:true},
-        {id:"img-hero-02",filename:"02.png",dims:"1200×900",fmt:"JPG/PNG/WEBP",desc:"Hero slide 2",done:true},
-        {id:"img-hero-03",filename:"03.png",dims:"1200×900",fmt:"JPG/PNG/WEBP",desc:"Hero slide 3",done:true},
-        {id:"img-hero-04",filename:"04.jpg / …",dims:"1200×900",fmt:"JPG/PNG/WEBP",desc:"Additional slides — name sequentially",done:false},
+      {label:"Hero Slideshow (Home)",path:"/src/assets/hero-slides/",images:[
+        {id:"img-hero-01",filename:"01.jpg",dims:"600×800",fmt:"JPG/PNG/WEBP",desc:"Hero slide 1 — lead image (portrait 3:4)",done:true},
+        {id:"img-hero-02",filename:"02.png",dims:"600×800",fmt:"JPG/PNG/WEBP",desc:"Hero slide 2 (portrait 3:4)",done:true},
+        {id:"img-hero-03",filename:"03.png",dims:"600×800",fmt:"JPG/PNG/WEBP",desc:"Hero slide 3 (portrait 3:4)",done:true},
+        {id:"img-hero-04",filename:"04.jpg / …",dims:"600×800",fmt:"JPG/PNG/WEBP",desc:"Additional slides — name sequentially",done:false},
+      ]},
+      {label:"Page Hero Backgrounds",path:"/public/images/",images:[
+        {id:"img-hero-mission",filename:"hero-mission.webp",dims:"1600×600",fmt:"WEBP",desc:"Our Mission page — background behind dark overlay (placeholder, needs real photo)"},
+        {id:"img-hero-stories",filename:"hero-stories.webp",dims:"1600×600",fmt:"WEBP",desc:"Success Stories page — background behind dark overlay (placeholder, needs real photo)"},
+        {id:"img-hero-involved",filename:"hero-involved.webp",dims:"1600×600",fmt:"WEBP",desc:"Get Involved page — background behind dark overlay (placeholder, needs real photo)"},
+        {id:"img-hero-donate",filename:"hero-donate.webp",dims:"1600×600",fmt:"WEBP",desc:"Donate page — background behind dark overlay (placeholder, needs real photo)"},
+      ]},
+      {label:"Donate Page Sidebar",path:"/public/images/",images:[
+        {id:"img-donate-hero",filename:"donate-hero.webp",dims:"800×1000",fmt:"WEBP",desc:"Emotional photo next to donation form — volunteer + dog or adoption moment (placeholder, needs real photo)"},
       ]},
       {label:"Program Cards",path:"/public/images/programs/",images:[
-        {id:"img-prog-food",filename:"program-food.webp",dims:"800×600",fmt:"WEBP*",desc:"Food & supplies distribution photo"},
-        {id:"img-prog-out",filename:"program-outreach.webp",dims:"800×600",fmt:"WEBP*",desc:"Team outreach scene photo"},
-        {id:"img-prog-spay",filename:"program-spayneuter.webp",dims:"800×600",fmt:"WEBP*",desc:"Spay/neuter clinic photo"},
-        {id:"img-prog-rescue",filename:"program-rescue.webp",dims:"800×600",fmt:"WEBP*",desc:"Rescue & rehoming moment photo"},
+        {id:"img-prog-food",filename:"program-food.webp",dims:"800×600",fmt:"WEBP",desc:"Food & supplies distribution photo",done:true},
+        {id:"img-prog-out",filename:"program-outreach.webp",dims:"800×600",fmt:"WEBP",desc:"Team outreach scene photo",done:true},
+        {id:"img-prog-spay",filename:"program-spayneuter.webp",dims:"800×600",fmt:"WEBP",desc:"Spay/neuter clinic photo",done:true},
+        {id:"img-prog-rescue",filename:"program-rescue.webp",dims:"800×600",fmt:"WEBP",desc:"Rescue & rehoming moment photo",done:true},
       ]},
-      {label:"Success Stories",path:"/public/images/success-stories/",images:[
-        {id:"img-dog-bodhi",filename:"dog-bodhi.webp",dims:"800×800",fmt:"WEBP*",desc:"Bodhi — featured dog (existing photo)"},
-        {id:"img-dog-02",filename:"dog-story-02.webp",dims:"800×800",fmt:"WEBP*",desc:"Story dog 2 — square crop"},
-        {id:"img-dog-03",filename:"dog-story-03.webp",dims:"800×800",fmt:"WEBP*",desc:"Story dog 3 — square crop"},
-        {id:"img-dog-04",filename:"dog-story-04.webp",dims:"800×800",fmt:"WEBP*",desc:"Story dog 4 — square crop"},
-        {id:"img-dog-05",filename:"dog-story-05.webp",dims:"800×800",fmt:"WEBP*",desc:"Story dog 5 — square crop"},
-        {id:"img-dog-06",filename:"dog-story-06.webp",dims:"800×800",fmt:"WEBP*",desc:"Story dog 6 — square crop"},
-      ]},
-      {label:"Mission Page",path:"/public/images/",images:[
-        {id:"img-mission-team",filename:"mission-team.webp",dims:"1200×800",fmt:"WEBP*",desc:"Team group photo"},
-        {id:"img-mission-out",filename:"mission-outreach.webp",dims:"1200×800",fmt:"WEBP*",desc:"Outreach in action photo"},
-      ]},
-      {label:"Outreach / Get Involved",path:"/public/images/outreach/",images:[
-        {id:"img-out-01",filename:"outreach-01.webp",dims:"900×700",fmt:"WEBP*",desc:"Foster section image"},
-        {id:"img-out-02",filename:"outreach-02.webp",dims:"900×700",fmt:"WEBP*",desc:"Volunteer section image"},
+      {label:"Success Stories (36+ loaded)",path:"/public/images/success-stories/",images:[
+        {id:"img-dog-all",filename:"dog-*.webp",dims:"800×800",fmt:"WEBP",desc:"36+ images loaded — auto-discovered by filename. Rename placeholders to real dog names.",done:true},
       ]},
       {label:"Social Sharing",path:"/public/images/",images:[
-        {id:"img-og",filename:"og-image.webp",dims:"1200×630",fmt:"WEBP*",desc:"Social share card — logo + tagline on photo"},
+        {id:"img-og",filename:"og-image.webp",dims:"1200×630",fmt:"WEBP",desc:"Social share card — logo + tagline on photo"},
       ]},
     ]
   },
   {
     phase:2, title:"WooCommerce Merch Store",
     tasks:[
-      {id:"p2-subdomain",text:"Create store. subdomain on DreamHost",note:"DreamHost panel → Domains → Add Hosting → store.alohaanimaloutreach.org. SSL provisions automatically.",tag:"manual"},
-      {id:"p2-wp",text:"Install WordPress on the subdomain",note:"Use DreamHost one-click installer, pointed at store.alohaanimaloutreach.org",tag:"manual"},
-      {id:"p2-woo",text:"Install and configure WooCommerce",note:"Plugins → Add New → WooCommerce. Run setup wizard: US/Hawaii, USD, physical products.",tag:"manual"},
+      {id:"p2-subdomain",text:"Create store. subdomain on DreamHost",note:"DreamHost panel → Domains → Add Hosting → store.alohaanimaloutreach.org. SSL provisions automatically.",done:true},
+      {id:"p2-wp",text:"Install WordPress on the subdomain",note:"Use DreamHost one-click installer, pointed at store.alohaanimaloutreach.org",done:true},
+      {id:"p2-woo",text:"Install and configure WooCommerce",note:"Plugins → Add New → WooCommerce. Run setup wizard: US/Hawaii, USD, physical products.",done:true},
       {id:"p2-printful",text:"Install Printful plugin and connect store",note:"Plugins → Add New → Printful for WooCommerce. Then Printful dashboard → Stores → Add Store → WooCommerce.",tag:"manual"},
       {id:"p2-products",text:"Confirm products sync from Printful to WooCommerce",note:"Products created in Printful auto-sync. Check WooCommerce → Products to confirm.",tag:"manual"},
       {id:"p2-storefront",text:"Install Storefront parent theme",note:"Appearance → Themes → Add New → search Storefront → Install (do not activate yet)",tag:"manual"},
@@ -204,16 +214,16 @@ const PHASES = [
     ]
   },
   {
-    phase:3, title:"DNS Migration",
+    phase:3, title:"DNS Migration & Go Live",
     tasks:[
-      {id:"p3-export",text:"Export old WordPress content",note:"WordPress admin → Tools → Export → All Content. Save the XML file.",tag:"dns"},
+      {id:"p3-export",text:"Export old WordPress content",note:"WordPress admin → Tools → Export → All Content. Save the XML file as backup.",tag:"dns"},
       {id:"p3-screenshot",text:"Screenshot all existing pages for reference",note:"Capture Home, About, Donate, and any other live pages before cutover",tag:"dns"},
       {id:"p3-verify",text:"Verify both new sites work on preview/staging URLs",note:"Astro site on Netlify preview URL + WooCommerce on store. subdomain — both fully tested",tag:"dns"},
-      {id:"p3-vercel-domain",text:"Add custom domain in Netlify",note:"Netlify dashboard → project → Settings → Domains → add alohaanimaloutreach.org. Netlify gives you the exact DNS values.",tag:"dns"},
-      {id:"p3-dns-main",text:"Update main domain DNS at registrar → Netlify",note:"Point A record or CNAME for alohaanimaloutreach.org to Netlify's provided values",tag:"dns"},
-      {id:"p3-dns-store",text:"Add store. subdomain A record → DreamHost IP",note:"Add A record for store pointing to your DreamHost server IP (find in DreamHost panel)",tag:"dns"},
-      {id:"p3-propagate",text:"Wait for DNS propagation",note:"Can be minutes to 48 hours. Use dnschecker.org to monitor.",tag:"waiting"},
-      {id:"p3-ssl",text:"Confirm SSL on both domains",note:"Both alohaanimaloutreach.org and store.alohaanimaloutreach.org should show padlock",tag:"dns"},
+      {id:"p3-netlify-domain",text:"Add custom domain in Netlify",note:"Netlify dashboard → Site settings → Domain management → Add custom domain → alohaanimaloutreach.org",tag:"dns"},
+      {id:"p3-dns-main",text:"Update DNS A record at registrar → Netlify",note:"A record: @ → 75.2.60.5 (Netlify load balancer). CNAME: www → your-site-name.netlify.app",tag:"dns"},
+      {id:"p3-dns-store",text:"Add store. subdomain A record → DreamHost IP",note:"A record for store pointing to your DreamHost server IP (find in DreamHost panel)",tag:"dns"},
+      {id:"p3-propagate",text:"Wait for DNS propagation",note:"Usually 15 min to a few hours, can take up to 48h. Monitor at dnschecker.org",tag:"waiting"},
+      {id:"p3-ssl",text:"Confirm SSL on both domains",note:"Netlify auto-provisions HTTPS via Let's Encrypt. Both alohaanimaloutreach.org and store. should show padlock.",tag:"dns"},
       {id:"p3-fallback",text:"Keep old WordPress live on DreamHost for 2 weeks",note:"Do not delete or modify the old site until the new one is confirmed stable",tag:"waiting"},
       {id:"p3-cleanup",text:"Decommission old WordPress site after 2-week window",note:"Once the Astro site is confirmed stable, the old WordPress install can be removed",tag:"waiting"},
     ]
@@ -268,7 +278,10 @@ function saveProgress(){
 function resetAll(){
   if(!confirm('Reset all checkboxes? Pre-done items will be re-checked automatically.'))return;
   checked={};
-  PHASES.forEach(p=>{if(p.imageGroups)p.imageGroups.forEach(g=>g.images.forEach(img=>{if(img.done)checked[img.id]=true;}));});
+  PHASES.forEach(p=>{
+    p.tasks.forEach(t=>{if(t.done)checked[t.id]=true;});
+    if(p.imageGroups)p.imageGroups.forEach(g=>g.images.forEach(img=>{if(img.done)checked[img.id]=true;}));
+  });
   saveState();render();updateProgress();
 }
 
@@ -389,7 +402,7 @@ function render(){
               <div class="task-text">${task.text}</div>
               ${task.note?`<div class="task-note">${task.note.replace(/\`([^\`]+)\`/g,'<code>$1</code>')}</div>`:''}
             </div>
-            ${tagHTML(task.tag)}
+            ${task.done?'<span class="task-tag tag-done-label">Done</span>':tagHTML(task.tag)}
             <span class="done-badge">Done</span>
           </div>`).join('')}
         ${imgHTML}
@@ -399,7 +412,10 @@ function render(){
 }
 
 loadState();
-PHASES.forEach(p=>{if(p.imageGroups)p.imageGroups.forEach(g=>g.images.forEach(img=>{if(img.done&&checked[img.id]===undefined)checked[img.id]=true;}));});
+PHASES.forEach(p=>{
+  p.tasks.forEach(t=>{if(t.done&&checked[t.id]===undefined)checked[t.id]=true;});
+  if(p.imageGroups)p.imageGroups.forEach(g=>g.images.forEach(img=>{if(img.done&&checked[img.id]===undefined)checked[img.id]=true;}));
+});
 render();updateProgress();
 window.addEventListener('beforeunload',saveState);
 </script>

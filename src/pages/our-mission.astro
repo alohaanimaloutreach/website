@@ -7,8 +7,10 @@ import ImpactStats from '../components/ImpactStats.astro';
 <Layout title="Our Mission | Aloha Animal Outreach" description="Learn why Aloha Animal Outreach exists and how we serve Honolulu's most vulnerable pets through food, veterinary care, and rescue support.">
 
   <!-- Hero -->
-  <section class="bg-anchor py-24 md:py-32">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+  <section class="relative py-24 md:py-32 overflow-hidden">
+    <img src="/images/hero-mission.webp" alt="" class="absolute inset-0 w-full h-full object-cover" loading="eager" />
+    <div class="absolute inset-0 bg-anchor/80"></div>
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
         From Homeless to Home:<br />A Mission Rooted in Compassion
       </h1>

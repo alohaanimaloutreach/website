@@ -51,20 +51,12 @@
       id="donate-btn"
       class="w-full bg-accent text-anchor font-bold py-4 rounded-lg text-lg hover:brightness-110 transition"
     >
-      Donate $30
+      Donate $50/mo
     </button>
 
     <p id="donation-error" class="mt-4 text-alert text-sm text-center hidden"></p>
   </form>
 
-  <!-- Impact context -->
-  <h3 class="mt-8 mb-4 font-display text-lg font-semibold text-text">Your Donation in Action</h3>
-  <div class="space-y-3 text-sm text-text-muted">
-    <p><strong class="text-text">$15</strong> provides a week of nutritious meals for one dog</p>
-    <p><strong class="text-text">$30</strong> covers a month of flea prevention for one dog</p>
-    <p><strong class="text-text">$50</strong> funds a wellness exam and vaccines</p>
-    <p><strong class="text-text">$100</strong> sponsors a spay or neuter surgery</p>
-  </div>
 </div>
 
 <script>
@@ -75,7 +67,7 @@
   const donateBtn = document.getElementById('donate-btn') as HTMLButtonElement;
   const errorMsg = document.getElementById('donation-error') as HTMLElement;
 
-  let selectedAmount = 30;
+  let selectedAmount = 50;
   let selectedInterval: 'once' | 'monthly' = 'monthly';
 
   function updateUI() {
@@ -149,6 +141,6 @@
     }
   });
 
-  // Initialize with $30 monthly selected
+  // Initialize with $50 monthly selected
   updateUI();
 </script>
