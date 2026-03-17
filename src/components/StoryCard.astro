@@ -16,7 +16,7 @@ const { name, caption, imageSrc, location, rescuedDate } = Astro.props;
   <ImagePlaceholder src={imageSrc} alt={name} aspectRatio="1/1" class="group-hover:scale-[1.02] transition-transform duration-300" />
   <div class="p-5">
     <div class="flex items-center justify-between mb-1">
-      <h3 class="font-display text-lg font-semibold">{name}</h3>
+      {name !== 'Name' && <h3 class="font-display text-lg font-semibold">{name}</h3>}
       {rescuedDate && (
         <span class="text-xs text-text-muted italic">Rescued {rescuedDate}</span>
       )}
