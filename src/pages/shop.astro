@@ -1,71 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-const storeUrl = 'https://shop.alohaanimaloutreach.org';
-
-const products = [
-  { name: 'AAO Classic Tee', price: '$28' },
-  { name: 'AAO Hoodie', price: '$45' },
-  { name: 'AAO Tote Bag', price: '$22' },
-  { name: 'AAO Sticker Pack', price: '$12' },
-  { name: 'AAO Dog Bandana', price: '$18' },
-  { name: 'AAO Hat', price: '$30' },
-];
 ---
 
 <Layout title="Shop | Aloha Animal Outreach" description="Shop to support the mission. Every purchase helps fund our outreach to pets in need.">
 
-  <!-- Hero -->
-  <section class="bg-anchor py-24 md:py-32">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
-        Shop to Support the Mission
-      </h1>
-      <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto">
-        Every purchase helps fund food, veterinary care, and rescue support for Oʻahu's most vulnerable pets.
-      </p>
-    </div>
-  </section>
-
-  <!-- Product Grid -->
-  <section class="py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
-        {products.map(product => (
-          <!-- TODO: Update href and product image when WooCommerce store is live -->
-          <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-            <div class="bg-[#e8ddd0] flex items-center justify-center text-text-muted text-sm font-mono" style="aspect-ratio: 1/1;">
-              <span>Product Image</span>
-            </div>
-            <div class="p-6">
-              <h3 class="font-display text-lg font-semibold mb-1">{product.name}</h3>
-              <p class="text-text-muted text-sm mb-4">{product.price}</p>
-              <a
-                href={storeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-block bg-primary text-white font-bold text-sm px-5 py-2.5 rounded-full hover:brightness-110 transition"
-              >
-                Shop Now
-              </a>
-            </div>
-          </div>
-        ))}
-
-      </div>
-
-      <p class="text-center text-text-muted text-sm mt-12">
-        Fulfilled by Printful · Ships within 3 to 5 business days
-      </p>
-    </div>
-  </section>
-
-  <!-- Donate CTA Strip -->
-  <section class="bg-anchor py-20">
+  <!-- Coming Soon -->
+  <section class="py-24 md:py-32">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-6">Want to Give Directly?</h2>
-      <p class="text-white/80 text-lg mb-10">100% of every donation goes to feeding, healing, and rehoming animals in need.</p>
+      <div class="text-6xl mb-6">🐾</div>
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-anchor mb-6">Coming Soon!</h2>
+      <p class="text-text-muted text-lg leading-relaxed mb-10">
+        We're working on a merch store where every purchase directly supports our mission. Tees, hoodies, tote bags, and more — all coming soon!
+      </p>
+      <p class="text-text-muted text-sm mb-10">
+        Want to support us right now? You can make a direct donation below.
+      </p>
       <a href="/donate" class="bg-accent text-anchor font-bold px-10 py-4 rounded-full text-lg hover:brightness-110 transition inline-block">
         Donate Now
       </a>
