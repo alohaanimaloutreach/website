@@ -19,7 +19,6 @@ const whiteLogoEntry = Object.values(whiteLogoFiles)[0];
 const whiteLogoSrc = whiteLogoEntry?.default.src;
 
 const navLinks = [
-  { href: '/', label: 'Home' },
   { href: '/our-mission', label: 'Our Mission' },
   { href: '/success-stories', label: 'Success Stories' },
   { href: '/get-involved', label: 'Get Involved' },
@@ -56,7 +55,8 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
         <a
           href={link.href}
           class:list={[
-            'text-sm font-medium transition-colors header-nav-link',
+            'nav-link text-sm font-medium transition-colors header-nav-link relative py-1',
+            currentPath === link.href ? 'nav-link-active' : '',
             hasDarkHero
               ? (currentPath === link.href ? 'text-white' : 'text-white/80 hover:text-white')
               : (currentPath === link.href ? 'text-primary' : 'text-anchor hover:text-primary')
@@ -72,7 +72,7 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
     <div class="flex items-center gap-4">
       <a
         href="/donate"
-        class="bg-accent text-anchor font-bold text-sm px-5 py-2 rounded-full hover:brightness-110 transition"
+        class="bg-primary text-white font-bold text-sm px-6 py-2.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200"
       >
         Donate
       </a>
@@ -179,3 +179,24 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
     updateHeader();
   }
 </script>
+
+<style>
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: currentColor;
+    transition: width 0.3s ease;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .nav-link-active::after {
+    width: 100%;
+  }
+</style>
