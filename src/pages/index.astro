@@ -76,20 +76,21 @@ const hasSlides = slides.length > 0;
 <Layout title="Aloha Animal Outreach | Be Part of Their Journey">
 
   <!-- Hero — Split layout with transformation carousel -->
-  <section class="bg-primary flex items-center">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+  <section class="relative flex items-center overflow-hidden">
+    <img src="/images/hero-home-1.webp" alt="" class="absolute inset-0 w-full h-full object-cover" loading="eager" />
+    <div class="absolute inset-0 bg-anchor/80"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16 md:pt-40 md:pb-24 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
       <!-- Left: Copy -->
       <div class="text-center lg:text-left">
-        <span class="text-accent text-sm font-semibold uppercase tracking-widest mb-6 block">Aloha Animal Outreach</span>
         <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-2">
           From Homeless to Home.
         </h1>
-        <p class="text-white/70 text-xl sm:text-2xl md:text-3xl font-display italic mb-8">Be Part of Their Journey</p>
-        <p class="text-white/80 text-base md:text-lg max-w-xl mb-10 leading-relaxed">
+        <p class="text-white/80 text-xl sm:text-2xl md:text-3xl font-display italic mb-8">Be Part of Their Journey</p>
+        <p class="text-white/90 text-base md:text-lg max-w-xl mb-10 leading-relaxed">
           Every pet deserves care, no matter where home is. We bring food, veterinary support, and rescue to animals living in Hawaiʻi's unhoused communities.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-          <a href="/donate" class="bg-accent text-anchor font-bold px-8 py-4 rounded-full text-lg hover:brightness-110 transition">
+          <a href="/donate" class="bg-primary text-white font-bold px-8 py-4 rounded-full text-lg hover:brightness-110 transition">
             Donate Now
           </a>
           <a href="/our-mission" class="border-2 border-white/60 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition">
@@ -131,7 +132,7 @@ const hasSlides = slides.length > 0;
           <div class="mt-4 flex justify-center gap-2">
             {slides.map((_, i) => (
               <button
-                class:list={['hero-dot w-2.5 h-2.5 rounded-full transition-colors', i === 0 ? 'bg-accent' : 'bg-white/30']}
+                class:list={['hero-dot w-2.5 h-2.5 rounded-full transition-colors', i === 0 ? 'bg-white' : 'bg-white/30']}
                 data-index={i}
                 aria-label={`Slide ${i + 1}`}
               />
@@ -154,7 +155,7 @@ const hasSlides = slides.length > 0;
         (s as HTMLElement).style.opacity = i === index ? '1' : '0';
       });
       dots.forEach((d, i) => {
-        d.classList.toggle('bg-accent', i === index);
+        d.classList.toggle('bg-white', i === index);
         d.classList.toggle('bg-white/30', i !== index);
       });
       current = index;
@@ -280,12 +281,12 @@ const hasSlides = slides.length > 0;
   </section>
 
   <!-- Donate CTA Strip -->
-  <section class="bg-anchor py-20">
+  <section class="bg-primary py-20">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-6">You Can Change a Life Today</h2>
-      <p class="text-white/80 text-lg mb-4">Your $30 feeds a dog for a month. Your $50 covers a wellness exam. Your $100 funds a spay or neuter surgery.</p>
-      <p class="text-white/60 text-sm mb-10">No overhead. No middleman. Just volunteers and the animals they love.</p>
-      <a href="/donate" class="bg-accent text-anchor font-bold px-10 py-4 rounded-full text-lg hover:brightness-110 transition inline-block">
+      <p class="text-white/90 text-lg mb-4">Your $30 feeds a dog for a month. Your $50 covers a wellness exam. Your $100 funds a spay or neuter surgery.</p>
+      <p class="text-white/70 text-sm mb-10">No overhead. No middleman. Just volunteers and the animals they love.</p>
+      <a href="/donate" class="bg-white text-primary font-bold px-10 py-4 rounded-full text-lg hover:brightness-95 transition inline-block">
         Donate Now
       </a>
     </div>

@@ -11,6 +11,13 @@ const logoFiles = import.meta.glob<{ default: ImageMetadata }>(
 const logoEntry = Object.values(logoFiles)[0];
 const logoSrc = logoEntry?.default.src;
 
+const whiteLogoFiles = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/logos/logo-white.{png,svg,jpg,jpeg,webp}',
+  { eager: true }
+);
+const whiteLogoEntry = Object.values(whiteLogoFiles)[0];
+const whiteLogoSrc = whiteLogoEntry?.default.src;
+
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/our-mission', label: 'Our Mission' },
@@ -20,17 +27,27 @@ const navLinks = [
 ];
 
 const currentPath = Astro.url.pathname;
+
+// Pages with dark hero sections get a transparent header
+const darkHeroPages = ['/', '/our-mission', '/success-stories', '/get-involved', '/donate'];
+const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.includes(currentPath.replace(/\/$/, ''));
 ---
 
-<header class="sticky top-0 z-50 bg-white shadow-md">
-  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-3">
-    <!-- Logo — drop logo.png/.svg/.jpg/.webp into /src/assets/logos/ -->
+<header id="site-header" class:list={[
+  'fixed top-0 w-full z-50 transition-all duration-300',
+  hasDarkHero ? 'bg-transparent' : 'bg-white shadow-md'
+]} data-dark-hero={hasDarkHero ? 'true' : 'false'}>
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-6 md:py-8">
+    <!-- Logo -->
     <a href="/" class="flex-shrink-0">
-      {logoSrc ? (
+      {hasDarkHero && whiteLogoSrc ? (
+        <>
+          <img src={whiteLogoSrc} alt="Aloha Animal Outreach" class="h-20 w-auto header-logo-white transition-opacity duration-300" />
+          <img src={logoSrc} alt="Aloha Animal Outreach" class="h-20 w-auto header-logo-dark transition-opacity duration-300 hidden" />
+        </>
+      ) : logoSrc ? (
         <img src={logoSrc} alt="Aloha Animal Outreach" class="h-20 w-auto" />
-      ) : (
-        <span class="text-white font-display font-bold text-lg">Aloha Animal Outreach</span>
-      )}
+      ) : null}
     </a>
 
     <!-- Desktop Nav -->
@@ -39,10 +56,10 @@ const currentPath = Astro.url.pathname;
         <a
           href={link.href}
           class:list={[
-            'text-sm font-medium transition-colors',
-            currentPath === link.href
-              ? 'text-primary'
-              : 'text-anchor hover:text-primary'
+            'text-sm font-medium transition-colors header-nav-link',
+            hasDarkHero
+              ? (currentPath === link.href ? 'text-white' : 'text-white/80 hover:text-white')
+              : (currentPath === link.href ? 'text-primary' : 'text-anchor hover:text-primary')
           ]}
           {...(link.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         >
@@ -63,7 +80,10 @@ const currentPath = Astro.url.pathname;
       <!-- Mobile hamburger -->
       <button
         id="mobile-menu-btn"
-        class="md:hidden text-anchor"
+        class:list={[
+          'md:hidden transition-colors',
+          hasDarkHero ? 'text-white' : 'text-anchor'
+        ]}
         aria-label="Open menu"
         aria-expanded="false"
       >
@@ -93,6 +113,9 @@ const currentPath = Astro.url.pathname;
   </div>
 </header>
 
+<!-- Spacer for pages without dark hero (header won't overlay content) -->
+{!hasDarkHero && <div class="h-[120px] md:h-[136px]"></div>}
+
 <script>
   const btn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('mobile-menu');
@@ -101,4 +124,58 @@ const currentPath = Astro.url.pathname;
     btn.setAttribute('aria-expanded', String(!expanded));
     menu?.classList.toggle('hidden');
   });
+
+  // Scroll-based header transition for pages with dark heroes
+  const header = document.getElementById('site-header');
+  const hasDarkHero = header?.dataset.darkHero === 'true';
+
+  if (hasDarkHero && header) {
+    const whiteLogo = header.querySelector('.header-logo-white') as HTMLElement;
+    const darkLogo = header.querySelector('.header-logo-dark') as HTMLElement;
+    const navLinks = header.querySelectorAll('.header-nav-link');
+    const hamburger = document.getElementById('mobile-menu-btn');
+
+    function updateHeader() {
+      const scrolled = window.scrollY > 50;
+
+      if (scrolled) {
+        header.classList.add('bg-white', 'shadow-md');
+        header.classList.remove('bg-transparent');
+        if (whiteLogo) { whiteLogo.classList.add('hidden'); }
+        if (darkLogo) { darkLogo.classList.remove('hidden'); }
+        navLinks.forEach(link => {
+          link.classList.remove('text-white', 'text-white/80', 'hover:text-white');
+          if (link.getAttribute('href') === window.location.pathname) {
+            link.classList.add('text-primary');
+          } else {
+            link.classList.add('text-anchor', 'hover:text-primary');
+          }
+        });
+        if (hamburger) {
+          hamburger.classList.remove('text-white');
+          hamburger.classList.add('text-anchor');
+        }
+      } else {
+        header.classList.remove('bg-white', 'shadow-md');
+        header.classList.add('bg-transparent');
+        if (whiteLogo) { whiteLogo.classList.remove('hidden'); }
+        if (darkLogo) { darkLogo.classList.add('hidden'); }
+        navLinks.forEach(link => {
+          link.classList.remove('text-anchor', 'hover:text-primary', 'text-primary');
+          if (link.getAttribute('href') === window.location.pathname) {
+            link.classList.add('text-white');
+          } else {
+            link.classList.add('text-white/80', 'hover:text-white');
+          }
+        });
+        if (hamburger) {
+          hamburger.classList.add('text-white');
+          hamburger.classList.remove('text-anchor');
+        }
+      }
+    }
+
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader();
+  }
 </script>
