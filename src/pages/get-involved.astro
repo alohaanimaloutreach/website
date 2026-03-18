@@ -28,7 +28,10 @@ import Layout from '../layouts/Layout.astro';
           <h2 class="font-display text-3xl md:text-4xl font-bold mt-2 mb-6">Open Your Home, Save a Life</h2>
           <div class="space-y-4 text-text-muted leading-relaxed">
             <p>
-              Fostering is the bridge between the street and a forever home. AAO partners with a local foster-based rescue to place dogs in safe, loving homes while they wait for their perfect match.
+              Fostering is the bridge between the street and a forever home. When a dog needs a home, we connect them with our network of trusted rescue partners who find fosters, manage the adoption process, and support new families every step of the way. You apply through them — we make the introduction.
+            </p>
+            <p>
+              <strong class="text-text">Our rescue partners:</strong> Fur Angel Foundation, K9 Kōkua, Kat Charities, Paws of Hawaiʻi, Poi Dogs and Popoki, OSPCA, and Hawaiian Humane Society.
             </p>
             <p><strong class="text-text">How it works:</strong></p>
             <ul class="list-disc list-inside space-y-2">
@@ -305,6 +308,93 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
+  <!-- Partner -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <span class="text-primary font-semibold text-sm uppercase tracking-wider">Partner</span>
+        <h2 class="font-display text-3xl md:text-4xl font-bold mt-2 mb-6">Partner With Us</h2>
+        <div class="space-y-4 text-text-muted leading-relaxed">
+          <p>
+            Local businesses, veterinary clinics, and organizations can make a direct, visible impact by partnering with AAO. Whether you sponsor a spay/neuter clinic, donate supplies for a monthly outreach, or add your voice to our advocacy work, your support goes straight to the field.
+          </p>
+          <p>
+            Every partnership is recognized on our website, social media, and at events. Every dollar is tax-deductible. And every contribution goes directly to the animals and the people who love them.
+          </p>
+        </div>
+        <a href="/partners" class="inline-block mt-6 bg-primary text-white font-bold px-6 py-3 rounded-full hover:brightness-110 transition mr-3">
+          View Partnership Options
+        </a>
+        <button class="inquiry-toggle inline-block mt-6 border-2 border-primary text-primary font-bold px-6 py-3 rounded-full hover:bg-primary hover:text-white transition" data-form="partner-form">
+          Partner Inquiry
+        </button>
+      </div>
+
+      <!-- Partner Inquiry Form -->
+      <div id="partner-form" class="inquiry-form hidden mt-12 max-w-2xl mx-auto">
+        <div class="bg-bg rounded-2xl shadow-sm border border-dark/10 p-8">
+          <h3 class="font-display text-xl font-semibold mb-6">Partner Inquiry</h3>
+          <form name="partner-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="space-y-5">
+            <input type="hidden" name="form-name" value="partner-inquiry" />
+            <input type="hidden" name="Form" value="Partner Inquiry" />
+            <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="partner-org" class="block text-sm font-semibold mb-1">Organization Name</label>
+                <input type="text" id="partner-org" name="organization" required
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <div>
+                <label for="partner-contact" class="block text-sm font-semibold mb-1">Contact Name</label>
+                <input type="text" id="partner-contact" name="contact-name" required
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="partner-email" class="block text-sm font-semibold mb-1">Email</label>
+                <input type="email" id="partner-email" name="email" required
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <div>
+                <label for="partner-phone" class="block text-sm font-semibold mb-1">Phone <span class="text-text-muted font-normal">(optional)</span></label>
+                <input type="tel" id="partner-phone" name="phone"
+                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+            </div>
+
+            <div>
+              <label for="partner-help" class="block text-sm font-semibold mb-1">How you would like to help</label>
+              <select id="partner-help" name="partnership-type" required
+                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="" disabled selected>Select one</option>
+                <option value="clinic-sponsor">Sponsor a spay/neuter clinic ($3,000)</option>
+                <option value="outreach-sponsor">Sponsor a monthly outreach event</option>
+                <option value="supplies">Donate supplies or food</option>
+                <option value="workplace-giving">Workplace giving or donation matching</option>
+                <option value="advocacy">Advocacy partnership</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="partner-about" class="block text-sm font-semibold mb-1">Tell us about your organization <span class="text-text-muted font-normal">(optional)</span></label>
+              <textarea id="partner-about" name="about" rows="3"
+                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary resize-y"></textarea>
+            </div>
+
+            <button type="submit"
+              class="bg-primary text-white font-bold px-8 py-3 rounded-full hover:brightness-110 transition">
+              Submit Partner Inquiry
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Donate CTA Strip -->
   <section class="bg-primary py-20">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -321,6 +411,15 @@ import Layout from '../layouts/Layout.astro';
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="font-display text-3xl md:text-4xl font-bold text-center mb-12">Frequently Asked Questions</h2>
       <div class="space-y-6">
+        <details class="group bg-bg rounded-xl p-6">
+          <summary class="flex justify-between items-center cursor-pointer font-semibold">
+            Where does AAO's funding go?
+            <svg class="w-5 h-5 text-text-muted group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <p class="mt-4 text-text-muted leading-relaxed">
+            Every dollar goes directly to the animals. AAO is 100% volunteer-run with no paid staff, which means your donation funds food, vaccines, flea prevention, spay/neuter surgeries, and emergency vet care — nothing else.
+          </p>
+        </details>
         <details class="group bg-bg rounded-xl p-6">
           <summary class="flex justify-between items-center cursor-pointer font-semibold">
             Do I need experience to foster or volunteer?

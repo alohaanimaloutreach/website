@@ -22,14 +22,15 @@ const navLinks = [
   { href: '/our-mission', label: 'Our Mission' },
   { href: '/success-stories', label: 'Success Stories' },
   { href: '/get-involved', label: 'Get Involved' },
+  { href: '/blog', label: 'Blog' },
   { href: '/shop', label: 'Shop' },
 ];
 
 const currentPath = Astro.url.pathname;
 
 // Pages with dark hero sections get a transparent header
-const darkHeroPages = ['/', '/our-mission', '/success-stories', '/get-involved', '/donate'];
-const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.includes(currentPath.replace(/\/$/, ''));
+const darkHeroPages = ['/', '/our-mission', '/success-stories', '/get-involved', '/donate', '/blog', '/partners'];
+const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.includes(currentPath.replace(/\/$/, '')) || currentPath.startsWith('/blog/');
 ---
 
 <header id="site-header" class:list={[
