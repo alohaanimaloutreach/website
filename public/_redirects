@@ -1,0 +1,8 @@
+# Old WordPress redirects
+/contact                /get-involved       301
+/contact/               /get-involved       301
+/from-homeless-to-home-one-dogs-journey-through-outreach-and-rescue/  /success-stories  301
+/feed/                  /                   301
+/comments/feed/         /                   301
+/wp-admin/*             /                   301
+/wp-login.php           /                   301

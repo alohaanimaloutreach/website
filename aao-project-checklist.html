@@ -168,8 +168,12 @@ const PHASES = [
       {id:"p1-contact-place",text:"Decide where to place the Contact form",note:"Contact form component is built but not placed on any page yet — no /contact page created",tag:"current"},
       {id:"p1-dog-rename",text:"Rename placeholder dog image files to actual names",note:"Files in /public/images/success-stories/ — rename dog-name-*.webp to real dog names",tag:"manual"},
       {id:"p1-dog-dates",text:"Update rescue dates on success story images",note:"Add _YYYY-MM suffix to filenames for rescue date (e.g. dog-coco_2024-03.webp)",tag:"manual"},
-      {id:"p1-shop-hidden",text:"Shop link hidden from nav until store is ready",note:"Commented out in Header and Footer — uncomment when WooCommerce store is set up on store.alohaanimaloutreach.org",done:true},
-      {id:"p1-shop-unhide",text:"Re-enable Shop link in nav when WooCommerce is ready",note:"Uncomment Shop nav link in Header.astro and Footer.astro after Phase 2 is complete",tag:"waiting"},
+      {id:"p1-shop-hidden",text:"Shop link hidden from nav until store is ready",note:"Commented out in Header and Footer — uncomment when store is set up",done:true},
+      {id:"p1-shop-unhide",text:"Unhide Shop link in nav pointing to Shopify",note:"Uncomment Shop nav link in Header.astro and Footer.astro — URL already set to https://shop.alohaanimaloutreach.org",tag:"waiting"},
+      {id:"p1-og-image",text:"Create OG image for social sharing",note:"og-image.webp (1200×630) added to /public/images/, absolute URL in meta tags",done:true},
+      {id:"p1-sitemap",text:"Add sitemap generation",note:"@astrojs/sitemap installed, site URL configured in astro.config.mjs",done:true},
+      {id:"p1-robots",text:"Add robots.txt",note:"public/robots.txt with sitemap reference",done:true},
+      {id:"p1-redirects",text:"Add 301 redirects for old WordPress URLs",note:"public/_redirects — /contact, /feed, /wp-admin, old blog post all redirect to new pages",done:true},
     ],
     imageGroups:[
       {label:"Logos",path:"/src/assets/logos/",images:[
@@ -208,21 +212,19 @@ const PHASES = [
         {id:"img-dog-all",filename:"dog-*.webp",dims:"800×800",fmt:"WEBP",desc:"36+ images loaded — auto-discovered by filename. Rename placeholders to real dog names.",done:true},
       ]},
       {label:"Social Sharing",path:"/public/images/",images:[
-        {id:"img-og",filename:"og-image.webp",dims:"1200×630",fmt:"WEBP",desc:"Social share card — logo + tagline on photo"},
+        {id:"img-og",filename:"og-image.webp",dims:"1200×630",fmt:"WEBP",desc:"Social share card — logo + tagline on photo",done:true},
       ]},
     ]
   },
   {
-    phase:2, title:"WooCommerce Merch Store",
+    phase:2, title:"Shopify Merch Store",
     tasks:[
-      {id:"p2-subdomain",text:"Create store. subdomain on DreamHost",note:"DreamHost panel → Domains → Add Hosting → store.alohaanimaloutreach.org. SSL provisions automatically.",done:true},
-      {id:"p2-wp",text:"Install WordPress on the subdomain",note:"Use DreamHost one-click installer, pointed at store.alohaanimaloutreach.org",done:true},
-      {id:"p2-woo",text:"Install and configure WooCommerce",note:"Plugins → Add New → WooCommerce. Run setup wizard: US/Hawaii, USD, physical products.",done:true},
-      {id:"p2-printful",text:"Install Printful plugin and connect store",note:"Plugins → Add New → Printful for WooCommerce. Then Printful dashboard → Stores → Add Store → WooCommerce.",tag:"manual"},
-      {id:"p2-products",text:"Confirm products sync from Printful to WooCommerce",note:"Products created in Printful auto-sync. Check WooCommerce → Products to confirm.",tag:"manual"},
-      {id:"p2-storefront",text:"Install Storefront parent theme",note:"Appearance → Themes → Add New → search Storefront → Install (do not activate yet)",tag:"manual"},
-      {id:"p2-childtheme",text:"Upload and activate AAO child theme",note:"Upload aao-storefront-child.zip via Appearance → Themes → Add New → Upload Theme → Activate",tag:"manual"},
-      {id:"p2-logo",text:"Upload logo in WordPress customizer",note:"Appearance → Customize → Site Identity → upload logo.svg",tag:"manual"},
+      {id:"p2-shopify",text:"Create Shopify store",note:"Shopify account set up under AAO email",done:true},
+      {id:"p2-printful",text:"Connect Printful to Shopify",note:"Printful app installed in Shopify, connected to AAO Printful account",done:true},
+      {id:"p2-subdomain",text:"Set up shop. subdomain DNS",note:"CNAME record: shop → shops.myshopify.com added in DreamHost DNS",done:true},
+      {id:"p2-domain",text:"Connect custom domain in Shopify",note:"shop.alohaanimaloutreach.org added in Shopify Settings → Domains, DNS provisioning",done:true},
+      {id:"p2-products",text:"Add products via Printful",note:"Create merch designs in Printful, sync to Shopify store",tag:"manual"},
+      {id:"p2-theme",text:"Customize Shopify theme with AAO branding",note:"Upload logo, set brand colors, customize homepage layout",tag:"manual"},
       {id:"p2-purchase",text:"Test a purchase end to end",note:"Place a test order, confirm Printful receives it, confirm order email sends",tag:"manual"},
     ]
   },
@@ -234,7 +236,7 @@ const PHASES = [
       {id:"p3-verify",text:"Verify new site works on custom domain",note:"Astro site confirmed working at https://alohaanimaloutreach.org with SSL",done:true},
       {id:"p3-netlify-domain",text:"Add custom domain in Netlify",note:"alohaanimaloutreach.org and www added in Netlify Domain management",done:true},
       {id:"p3-dns-main",text:"Update DNS A record → Netlify",note:"A record @ → 75.2.60.5, CNAME www → alohaanimaloutreach.netlify.app — set in DreamHost DNS (nameservers on DreamHost)",done:true},
-      {id:"p3-dns-store",text:"Store subdomain on DreamHost",note:"store.alohaanimaloutreach.org stays on DreamHost — existing A record untouched",done:true},
+      {id:"p3-dns-store",text:"Shop subdomain → Shopify",note:"shop.alohaanimaloutreach.org CNAME → shops.myshopify.com in DreamHost DNS",done:true},
       {id:"p3-propagate",text:"DNS propagation complete",note:"Propagated and verified 2026-03-16",done:true},
       {id:"p3-ssl",text:"SSL certificate provisioned",note:"Let's Encrypt certificate auto-provisioned by Netlify, HTTPS working on both root and www",done:true},
       {id:"p3-fallback",text:"Keep old WordPress live on DreamHost for 2 weeks",note:"Do not delete or modify the old site until the new one is confirmed stable",tag:"waiting"},
