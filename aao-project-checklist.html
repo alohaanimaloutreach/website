@@ -10,8 +10,7 @@
     :root {
       --olive:#6ea832;--night:#1c1708;--dark:#3a3210;--gold:#e8c84a;--sand:#f7f1e3;
       --ember:#c45c2a;--white:#ffffff;--muted:#7a7060;--stripe:#f0ece1;--done-bg:#eef6e3;
-      --phase1:#6ea832;--phase2:#3a8a7a;--phase3:#c45c2a;--phase4:#7a5cb8;
-    }
+      --phase1:#6ea832;--phase2:#3a8a7a;--phase3:#c45c2a;    }
     body { font-family:'Figtree',sans-serif; background:var(--sand); color:var(--night); min-height:100vh; padding:2rem 1.5rem 4rem; }
     .header { max-width:900px; margin:0 auto 2rem; }
     .header-top { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
@@ -35,8 +34,7 @@
     .phase-pill[data-phase="2"]:hover,.phase-pill[data-phase="2"].active{background:var(--phase2);color:var(--white);}
     .phase-pill[data-phase="3"]{border-color:var(--phase3);color:var(--phase3);}
     .phase-pill[data-phase="3"]:hover,.phase-pill[data-phase="3"].active{background:var(--phase3);color:var(--white);}
-    .phase-pill[data-phase="4"]{border-color:var(--phase4);color:var(--phase4);}
-    .phase-pill[data-phase="4"]:hover,.phase-pill[data-phase="4"].active{background:var(--phase4);color:var(--white);}
+
     .phase-pill[data-phase="all"]{border-color:var(--muted);color:var(--muted);}
     .phase-pill[data-phase="all"]:hover,.phase-pill[data-phase="all"].active{background:var(--night);color:var(--white);border-color:var(--night);}
     .sections { max-width:900px; margin:0 auto; display:flex; flex-direction:column; gap:1.25rem; }
@@ -44,7 +42,7 @@
     .section[data-phase="1"]{border-left-color:var(--phase1);}
     .section[data-phase="2"]{border-left-color:var(--phase2);}
     .section[data-phase="3"]{border-left-color:var(--phase3);}
-    .section[data-phase="4"]{border-left-color:var(--phase4);}
+
     .section.hidden { display:none; }
     .section-header { background:var(--night); padding:0.75rem 1.2rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; cursor:pointer; user-select:none; }
     .section-header:hover { background:var(--dark); }
@@ -53,7 +51,7 @@
     .section[data-phase="1"] .phase-badge{background:var(--phase1);color:var(--white);}
     .section[data-phase="2"] .phase-badge{background:var(--phase2);color:var(--white);}
     .section[data-phase="3"] .phase-badge{background:var(--phase3);color:var(--white);}
-    .section[data-phase="4"] .phase-badge{background:var(--phase4);color:var(--white);}
+
     .section-title { font-family:'Fraunces',serif; font-size:0.95rem; font-weight:600; color:var(--white); }
     .section-right { display:flex; align-items:center; gap:0.75rem; flex-shrink:0; }
     .section-pill { font-size:0.72rem; font-weight:700; color:var(--night); background:var(--gold); border-radius:99px; padding:0.15rem 0.6rem; }
@@ -149,7 +147,7 @@ const PHASES = [
       {id:"p1-deploy",text:"Deploy to Netlify on a preview URL",note:"GitHub repo connected to Netlify, auto-deploys on push to main",done:true},
       {id:"p1-github",text:"Push to GitHub under AAO org",note:"Repo at github.com/alohaanimaloutreach/website — org owns it, shaunagits is collaborator",done:true},
       {id:"p1-pages",text:"Build all website pages",note:"Home, Our Mission, Success Stories, Get Involved, Donate (+ thank-you) — all complete",done:true},
-      {id:"p1-forms",text:"Set up Netlify Forms",note:"5 forms built: Foster, Volunteer, Veterinarian, Success Story Submission, Contact (unplaced)",done:true},
+      {id:"p1-forms",text:"Set up Netlify Forms",note:"7 forms built: Foster, Volunteer, Veterinarian, Partner (Get Involved), Partner (Partners Page), Success Story Submission, Contact (unplaced). Email notifications configured.",done:true},
       {id:"p1-donate-enhance",text:"Donation page enhancements",note:"Two-column layout with photo, social proof line, impact heading, $50 default, manage-giving pill button",done:true},
       {id:"p1-hero-bg",text:"Add hero background images with overlay to all interior pages",note:"Our Mission, Success Stories, Get Involved, Donate — bg image + bg-anchor/80 overlay. Real photos loaded 2026-03-16.",done:true},
       {id:"p1-env",text:"Set Netlify environment variables",note:"Site settings → Environment variables: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `PUBLIC_SITE_URL`, `RESEND_API_KEY`, `RESEND_AUDIENCE_ID` — all configured in Netlify dashboard",done:true},
@@ -164,12 +162,15 @@ const PHASES = [
       {id:"p1-dog-names-hidden",text:"Hide placeholder dog names on success story cards",note:"Cards with name 'Name' only show rescued date — 22 files still need real names",done:true},
       {id:"p1-real-photos",text:"Replace all placeholder images with real photos",note:"Hero backgrounds, donate sidebar, mission outreach, mission team, outreach-01, outreach-02 — all loaded",done:true},
       {id:"p1-git-auth",text:"Fix Git authentication",note:"Removed old revoked PAT from remote URL, configured gh auth setup-git as credential helper",done:true},
-      {id:"p1-forms-notify",text:"Enable Netlify Forms email notifications",note:"Netlify dashboard → Forms → Form notifications → add email notification for each form",tag:"manual"},
+      {id:"p1-forms-notify",text:"Enable Netlify Forms email notifications",note:"Configured in Netlify dashboard on 2026-03-17",done:true},
+      {id:"p1-blog",text:"Add blog system with content collections",note:"Astro Content Collections with glob loader, markdown posts in src/content/blog/, blog listing + post template pages",done:true},
+      {id:"p1-partners",text:"Add Partners page with inquiry form",note:"/partners page with 6 partnership tiers, benefits checklist, Netlify inquiry form — linked in footer only",done:true},
+      {id:"p1-hero-redesign",text:"Redesign homepage hero and header",note:"Photo background hero, transparent header with scroll transition, color system overhaul (green primary, yellow accent, near-black anchor)",done:true},
+      {id:"p1-nav-polish",text:"Nav polish and footer updates",note:"Removed Home link, added underline animation, green Donate button, Partner With Us in footer",done:true},
       {id:"p1-contact-place",text:"Decide where to place the Contact form",note:"Contact form component is built but not placed on any page yet — no /contact page created",tag:"current"},
       {id:"p1-dog-rename",text:"Rename placeholder dog image files to actual names",note:"Files in /public/images/success-stories/ — rename dog-name-*.webp to real dog names",tag:"manual"},
       {id:"p1-dog-dates",text:"Update rescue dates on success story images",note:"Add _YYYY-MM suffix to filenames for rescue date (e.g. dog-coco_2024-03.webp)",tag:"manual"},
-      {id:"p1-shop-hidden",text:"Shop link hidden from nav until store is ready",note:"Commented out in Header and Footer — uncomment when store is set up",done:true},
-      {id:"p1-shop-unhide",text:"Unhide Shop link in nav pointing to Shopify",note:"Uncomment Shop nav link in Header.astro and Footer.astro — URL already set to https://shop.alohaanimaloutreach.org",tag:"waiting"},
+      {id:"p1-shop-page",text:"Shop page with Coming Soon placeholder",note:"/shop page live in nav — shows Coming Soon message with Donate CTA, ready to update when Shopify has products",done:true},
       {id:"p1-og-image",text:"Create OG image for social sharing",note:"og-image.webp (1200×630) added to /public/images/, absolute URL in meta tags",done:true},
       {id:"p1-sitemap",text:"Add sitemap generation",note:"@astrojs/sitemap installed, site URL configured in astro.config.mjs",done:true},
       {id:"p1-robots",text:"Add robots.txt",note:"public/robots.txt with sitemap reference",done:true},
@@ -223,8 +224,9 @@ const PHASES = [
       {id:"p2-printful",text:"Connect Printful to Shopify",note:"Printful app installed in Shopify, connected to AAO Printful account",done:true},
       {id:"p2-subdomain",text:"Set up shop. subdomain DNS",note:"CNAME record: shop → shops.myshopify.com added in DreamHost DNS",done:true},
       {id:"p2-domain",text:"Connect custom domain in Shopify",note:"shop.alohaanimaloutreach.org added in Shopify Settings → Domains, DNS provisioning",done:true},
-      {id:"p2-products",text:"Add products via Printful",note:"Create merch designs in Printful, sync to Shopify store",tag:"manual"},
-      {id:"p2-theme",text:"Customize Shopify theme with AAO branding",note:"Upload logo, set brand colors, customize homepage layout",tag:"manual"},
+      {id:"p2-ssl",text:"Fix Shopify SSL for custom domain",note:"SSL working, password protection removed — store is public",done:true},
+      {id:"p2-products",text:"Add products via Printful",note:"Create merch designs in Printful, sync to Shopify store",tag:"waiting"},
+      {id:"p2-theme",text:"Customize Shopify theme with AAO branding",note:"Upload logo, set brand colors (primary #6ea832, text #111111, accent #e8c84a, bg #f7f1e3), fonts (Lora or Playfair Display for headings, DM Sans for body)",tag:"current"},
       {id:"p2-purchase",text:"Test a purchase end to end",note:"Place a test order, confirm Printful receives it, confirm order email sends",tag:"manual"},
     ]
   },
@@ -241,26 +243,6 @@ const PHASES = [
       {id:"p3-ssl",text:"SSL certificate provisioned",note:"Let's Encrypt certificate auto-provisioned by Netlify, HTTPS working on both root and www",done:true},
       {id:"p3-fallback",text:"Keep old WordPress live on DreamHost for 2 weeks",note:"Do not delete or modify the old site until the new one is confirmed stable",tag:"waiting"},
       {id:"p3-cleanup",text:"Decommission old WordPress site after 2-week window",note:"Once the Astro site is confirmed stable, the old WordPress install can be removed",tag:"waiting"},
-    ]
-  },
-  {
-    phase:4, title:"AAO Command Center App",
-    tasks:[
-      {id:"p4-supabase",text:"Create Supabase project for the Command Center",note:"supabase.com → New project. Set up DB, enable auth.",tag:"code"},
-      {id:"p4-schema",text:"Build database schema",note:"Tables: dogs, families, locations, medical_events, outreach, field_notes",tag:"code"},
-      {id:"p4-seed",text:"Seed with test data",note:"Add a handful of dogs, families, and locations so the UI has something to display",tag:"code"},
-      {id:"p4-auth",text:"Set up Supabase auth",note:"Email/password for internal team. Row-level security on all tables.",tag:"code"},
-      {id:"p4-scaffold",text:"Scaffold React + TypeScript + Tailwind project",note:"Vite or Create React App. Connect to Supabase. Set up routing.",tag:"code"},
-      {id:"p4-dashboard",text:"Build Dashboard page",note:"Key stats, overdue medical events, recent field notes",tag:"code"},
-      {id:"p4-dogs",text:"Build Dogs page",note:"List, search, sort. Dog profile with AAO-XXXXXX auto ID.",tag:"code"},
-      {id:"p4-families",text:"Build Families page",note:"Family profiles linked to dogs and locations",tag:"code"},
-      {id:"p4-locations",text:"Build Locations page",note:"Encampment/location profiles with linked families and dogs",tag:"code"},
-      {id:"p4-medical",text:"Build Medical Events page",note:"Overdue events surface with red badges. Filterable by dog.",tag:"code"},
-      {id:"p4-outreach",text:"Build Outreach page",note:"Log monthly outreach sessions. Link to dogs and families present.",tag:"code"},
-      {id:"p4-fieldnotes",text:"Build Field Notes drawer + full page",note:"Accessible from every page as slide-out overlay. Timestamped, tagged by dog/location.",tag:"code"},
-      {id:"p4-reports",text:"Build Reports page with CSV export",note:"Dogs by status, medical overdue, distribution history",tag:"code"},
-      {id:"p4-mobile",text:"Mobile polish — bottom tab bar",note:"On mobile, nav collapses to bottom tab bar: Dashboard, Dogs, Families, Outreach, Notes",tag:"code"},
-      {id:"p4-subdomain",text:"Deploy to app.alohaanimaloutreach.org",note:"Netlify deployment. Add subdomain DNS record at registrar → Netlify.",tag:"dns"},
     ]
   },
 ];
