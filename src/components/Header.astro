@@ -34,7 +34,7 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
 
 <header id="site-header" class:list={[
   'fixed top-0 w-full z-50 transition-all duration-300',
-  hasDarkHero ? 'bg-transparent' : 'bg-white shadow-md'
+  hasDarkHero ? 'bg-transparent' : 'bg-bg shadow-md'
 ]} data-dark-hero={hasDarkHero ? 'true' : 'false'}>
   <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-6 md:py-8">
     <!-- Logo -->
@@ -139,7 +139,7 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
       const scrolled = window.scrollY > 50;
 
       if (scrolled) {
-        header.classList.add('bg-white', 'shadow-md');
+        header.classList.add('bg-bg', 'shadow-md');
         header.classList.remove('bg-transparent');
         if (whiteLogo) { whiteLogo.classList.add('hidden'); }
         if (darkLogo) { darkLogo.classList.remove('hidden'); }
@@ -156,7 +156,7 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
           hamburger.classList.add('text-anchor');
         }
       } else {
-        header.classList.remove('bg-white', 'shadow-md');
+        header.classList.remove('bg-bg', 'shadow-md');
         header.classList.add('bg-transparent');
         if (whiteLogo) { whiteLogo.classList.remove('hidden'); }
         if (darkLogo) { darkLogo.classList.add('hidden'); }
