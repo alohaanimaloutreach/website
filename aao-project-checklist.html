@@ -226,8 +226,9 @@ const PHASES = [
       {id:"p2-domain",text:"Connect custom domain in Shopify",note:"shop.alohaanimaloutreach.org added in Shopify Settings → Domains, DNS provisioning",done:true},
       {id:"p2-ssl",text:"Fix Shopify SSL for custom domain",note:"SSL working, password protection removed — store is public",done:true},
       {id:"p2-products",text:"Add products via Printful",note:"Create merch designs in Printful, sync to Shopify store",tag:"waiting"},
-      {id:"p2-theme",text:"Customize Shopify theme with AAO branding",note:"Upload logo, set brand colors (primary #6ea832, text #111111, accent #e8c84a, bg #f7f1e3), fonts (Lora or Playfair Display for headings, DM Sans for body)",tag:"current"},
-      {id:"p2-purchase",text:"Test a purchase end to end",note:"Place a test order, confirm Printful receives it, confirm order email sends",tag:"manual"},
+      {id:"p2-theme",text:"Customize Shopify theme with AAO branding",note:"Horizon theme — logo, colors (#6ea832 green, #111111 text, #e8c84a accent, #f7f1e3 sand bg), fonts (Playfair Display headings, DM Sans body), announcement bar, menu links to main site",done:true},
+      {id:"p2-test-order",text:"Place a test order through Shopify + Printful",note:"In Shopify admin → Settings → Payments → enable Shopify Payments test mode (use Bogus Gateway or Shopify test card 4242424242424242, any future exp, any CVV). In Printful dashboard, orders from test payments will show as test orders. Confirm: order appears in Shopify Orders, Printful receives and holds the order, customer confirmation email sends.",tag:"manual"},
+      {id:"p2-go-live",text:"Switch store to live mode and accept real orders",note:"1) In Shopify Settings → Payments → disable test mode on Shopify Payments (or activate it if using Bogus Gateway). 2) In Printful Settings → ensure billing info and shipping rates are configured so orders auto-fulfill. 3) Remove any test orders from Shopify Orders. 4) Place a small real order yourself to confirm the full flow (payment → Printful fulfillment → shipping confirmation email). 5) Update /shop page on main site from 'Coming Soon' when ready.",tag:"waiting"},
     ]
   },
   {
