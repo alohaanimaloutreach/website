@@ -39,7 +39,7 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
 ---
 
 {announcement?.text && (
-  <div id="announcement-bar" class="fixed top-0 w-full z-[60] bg-accent text-anchor text-center text-xs sm:text-sm font-medium py-1.5 sm:py-2 px-8 sm:px-4">
+  <div id="announcement-bar" class="fixed top-0 w-full z-[60] bg-accent text-anchor text-center text-xs sm:text-sm font-medium py-3.5 sm:py-2 px-8 sm:px-4">
     {announcement.link ? (
       <a href={announcement.link} class="hover:underline">
         {announcement.text} &rarr;
@@ -55,7 +55,7 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
 
 <header id="site-header" class:list={[
   'fixed w-full z-50 transition-all duration-300',
-  announcement?.text ? 'top-[30px] sm:top-[36px]' : 'top-0',
+  announcement?.text ? '' : 'top-0',
   hasDarkHero ? 'bg-transparent' : 'bg-bg shadow-md'
 ]} data-dark-hero={hasDarkHero ? 'true' : 'false'} data-has-announcement={announcement?.text ? 'true' : 'false'}>
   <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-4 md:py-8">
@@ -136,7 +136,7 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
 </header>
 
 <!-- Spacer for pages without dark hero (header won't overlay content) -->
-{!hasDarkHero && <div id="header-spacer" class:list={[announcement?.text ? 'h-[140px] md:h-[172px]' : 'h-[104px] md:h-[136px]']}></div>}
+{!hasDarkHero && <div id="header-spacer"></div>}
 
 <script>
   const btn = document.getElementById('mobile-menu-btn');
@@ -147,21 +147,33 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
     menu?.classList.toggle('hidden');
   });
 
-  // Announcement bar dismiss
+  // Position header directly below announcement bar
   const announcementBar = document.getElementById('announcement-bar');
   const announcementClose = document.getElementById('announcement-close');
   const headerSpacer = document.getElementById('header-spacer');
+  const siteHeader = document.getElementById('site-header');
+
+  function positionHeader() {
+    if (announcementBar && siteHeader) {
+      const barHeight = announcementBar.offsetHeight;
+      siteHeader.style.top = barHeight + 'px';
+    }
+    if (headerSpacer && siteHeader) {
+      const totalHeight = (announcementBar ? announcementBar.offsetHeight : 0) + siteHeader.offsetHeight;
+      headerSpacer.style.height = totalHeight + 'px';
+    }
+  }
+
+  positionHeader();
+  window.addEventListener('resize', positionHeader);
 
   announcementClose?.addEventListener('click', () => {
     announcementBar?.remove();
-    const siteHeader = document.getElementById('site-header');
     if (siteHeader) {
-      siteHeader.classList.remove('top-[30px]', 'sm:top-[36px]');
-      siteHeader.classList.add('top-0');
+      siteHeader.style.top = '0px';
     }
-    if (headerSpacer) {
-      headerSpacer.classList.remove('h-[140px]', 'md:h-[172px]');
-      headerSpacer.classList.add('h-[104px]', 'md:h-[136px]');
+    if (headerSpacer && siteHeader) {
+      headerSpacer.style.height = siteHeader.offsetHeight + 'px';
     }
   });
 
