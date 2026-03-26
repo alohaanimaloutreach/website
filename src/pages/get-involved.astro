@@ -1,6 +1,38 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
+import FosterDogCard from '../components/FosterDogCard.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Auto-discover foster dogs from /public/images/foster-dogs/
+const fosterDir = path.join(process.cwd(), 'public/images/foster-dogs');
+let fosterDogs: { name: string; imageSrc: string; detail?: string }[] = [];
+
+if (fs.existsSync(fosterDir)) {
+  const files = fs.readdirSync(fosterDir)
+    .filter((f: string) => f.endsWith('.webp'))
+    .sort((a: string, b: string) => a.localeCompare(b));
+
+  fosterDogs = files.map((f: string) => {
+    const base = f.replace('.webp', '');
+    // Naming: foster-name_detail-detail.webp
+    // e.g. foster-doby_11yr-neutered-male-scottish-terrier-32lbs.webp
+    // Split on first underscore only: name vs detail
+    const withoutPrefix = base.replace(/^foster-/, '');
+    const underscoreIdx = withoutPrefix.indexOf('_');
+    const rawName = underscoreIdx > -1 ? withoutPrefix.slice(0, underscoreIdx) : withoutPrefix;
+    const rawDetail = underscoreIdx > -1 ? withoutPrefix.slice(underscoreIdx + 1) : undefined;
+    const name = rawName.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    // Replace hyphens with spaces, add mid-dots between detail segments for readability
+    // e.g. "11yr-neutered-male-scottish-terrier-32lbs" → "11 yr · Neutered male · Scottish terrier · 32 lbs"
+    const detail = rawDetail
+      ?.replace(/-/g, ' ')
+      .replace(/(\d+)\s*(yr|mo|lbs)/g, '$1 $2')
+      .replace(/^(\S)/, (_: string, c: string) => c.toUpperCase());
+    return { name, imageSrc: `/images/foster-dogs/${f}`, detail };
+  });
+}
 ---
 
 <Layout title="Get Involved | Aloha Animal Outreach" description="Foster, volunteer, or donate supplies to help Oʻahu's most vulnerable pets.">
@@ -117,6 +149,24 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
+  <!-- Dogs That Need a Foster -->
+  {fosterDogs.length > 0 && (
+    <section class="py-20 bg-bg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <span class="text-primary font-semibold text-sm uppercase tracking-wider">Urgent Need</span>
+          <h2 class="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">Dogs Looking for a Foster Home</h2>
+          <p class="text-text-muted max-w-2xl mx-auto">These dogs are waiting for someone to open their home. Could that be you?</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {fosterDogs.map(dog => (
+            <FosterDogCard name={dog.name} imageSrc={dog.imageSrc} detail={dog.detail} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
   <!-- Volunteer -->
   <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -215,18 +265,55 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- Visiting Veterinarian -->
+  <!-- More Ways to Help — Vet + Partner side by side -->
   <section class="py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-3xl mx-auto text-center">
-        <span class="text-primary font-semibold text-sm uppercase tracking-wider">Veterinary Professionals</span>
-        <h2 class="font-display text-3xl md:text-4xl font-bold mt-2 mb-6">Visiting the Island? Lend Your Skills.</h2>
-        <p class="text-text-muted leading-relaxed mb-6">
-          If you're a veterinarian or vet tech visiting Hawaiʻi, we'd love to connect. Our community clinics always need skilled hands for spay/neuter surgeries, wellness exams, and emergency care. Even a single day of your time can change dozens of lives.
-        </p>
-        <button class="inquiry-toggle inline-block bg-primary text-white font-bold px-6 py-3 rounded-full hover:brightness-110 transition" data-form="vet-form">
-          Veterinarian Inquiry
-        </button>
+      <div class="text-center mb-12">
+        <span class="text-primary font-semibold text-sm uppercase tracking-wider">More Ways to Help</span>
+        <h2 class="font-display text-3xl md:text-4xl font-bold mt-2">Bring Your Skills or Your Business</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Vet Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-dark/10 p-8 flex flex-col">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-xl font-bold">Visiting Veterinarian</h3>
+          </div>
+          <p class="text-text-muted leading-relaxed mb-6 flex-grow">
+            If you're a veterinarian or vet tech visiting Hawaiʻi, we'd love to connect. Our community clinics always need skilled hands for spay/neuter surgeries, wellness exams, and emergency care. Even a single day of your time can change dozens of lives.
+          </p>
+          <button class="inquiry-toggle self-start bg-primary text-white font-bold px-6 py-3 rounded-full hover:brightness-110 transition" data-form="vet-form">
+            Veterinarian Inquiry
+          </button>
+        </div>
+
+        <!-- Partner Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-dark/10 p-8 flex flex-col">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center">
+              <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-xl font-bold">Partner With Us</h3>
+          </div>
+          <p class="text-text-muted leading-relaxed mb-6 flex-grow">
+            Local businesses, veterinary clinics, and organizations can make a direct, visible impact by partnering with AAO. Whether you sponsor a clinic, donate supplies, or lend your voice, your support goes straight to the field. Every partnership is recognized and every dollar is tax-deductible.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="/partners" class="bg-primary text-white font-bold px-6 py-3 rounded-full hover:brightness-110 transition">
+              View Options
+            </a>
+            <button class="inquiry-toggle border-2 border-primary text-primary font-bold px-6 py-3 rounded-full hover:bg-primary hover:text-white transition" data-form="partner-form">
+              Partner Inquiry
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Vet Inquiry Form -->
@@ -304,30 +391,6 @@ import Layout from '../layouts/Layout.astro';
             </button>
           </form>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Partner -->
-  <section class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-3xl mx-auto text-center">
-        <span class="text-primary font-semibold text-sm uppercase tracking-wider">Partner</span>
-        <h2 class="font-display text-3xl md:text-4xl font-bold mt-2 mb-6">Partner With Us</h2>
-        <div class="space-y-4 text-text-muted leading-relaxed">
-          <p>
-            Local businesses, veterinary clinics, and organizations can make a direct, visible impact by partnering with AAO. Whether you sponsor a spay/neuter clinic, donate supplies for a monthly outreach, or add your voice to our advocacy work, your support goes straight to the field.
-          </p>
-          <p>
-            Every partnership is recognized on our website, social media, and at events. Every dollar is tax-deductible. And every contribution goes directly to the animals and the people who love them.
-          </p>
-        </div>
-        <a href="/partners" class="inline-block mt-6 bg-primary text-white font-bold px-6 py-3 rounded-full hover:brightness-110 transition mr-3">
-          View Partnership Options
-        </a>
-        <button class="inquiry-toggle inline-block mt-6 border-2 border-primary text-primary font-bold px-6 py-3 rounded-full hover:bg-primary hover:text-white transition" data-form="partner-form">
-          Partner Inquiry
-        </button>
       </div>
 
       <!-- Partner Inquiry Form -->
