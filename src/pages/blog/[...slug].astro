@@ -14,6 +14,12 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 
+// Get all other posts for sidebar, sorted by date (newest first)
+const allPosts = await getCollection('blog');
+const otherPosts = allPosts
+  .filter(p => p.id !== post.id)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
 const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 function formatDate(date: Date): string {
   return `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
@@ -44,17 +50,52 @@ function formatDate(date: Date): string {
     </div>
   </section>
 
-  <!-- Post Content -->
+  <!-- Post Content + Sidebar -->
   <section class="py-16">
-    <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 blog-content">
-      <Content />
-    </article>
-  </section>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">
+        <!-- Main Content -->
+        <div>
+          <article class="blog-content">
+            <Content />
+          </article>
+          <div class="mt-12">
+            <a href="/blog" class="text-primary font-semibold hover:underline">← Back to all posts</a>
+          </div>
+        </div>
 
-  <!-- Back to Blog -->
-  <section class="pb-16">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-      <a href="/blog" class="text-primary font-semibold hover:underline">← Back to all posts</a>
+        <!-- Sidebar -->
+        <aside class="lg:border-l lg:border-dark/10 lg:pl-8">
+          {otherPosts.length > 0 && (
+            <div class="sticky top-[180px]">
+              <h3 class="font-display text-lg font-bold mb-6">More Posts</h3>
+              <div class="space-y-6">
+                {otherPosts.map(p => (
+                  <a href={`/blog/${p.id}`} class="block group">
+                    {p.data.image && (
+                      <img src={p.data.image} alt="" class="w-full h-32 object-cover rounded-xl mb-3 group-hover:brightness-90 transition" loading="lazy" />
+                    )}
+                    <h4 class="font-semibold text-sm leading-snug group-hover:text-primary transition">
+                      {p.data.title}
+                    </h4>
+                    <time class="text-xs text-text-muted mt-1 block" datetime={p.data.date.toISOString().split('T')[0]}>
+                      {formatDate(p.data.date)}
+                    </time>
+                  </a>
+                ))}
+              </div>
+
+              <div class="mt-8 p-5 bg-bg rounded-xl">
+                <h4 class="font-display font-bold mb-2">Support Our Work</h4>
+                <p class="text-text-muted text-sm mb-4">Every dollar goes directly to the animals.</p>
+                <a href="/donate" class="block text-center bg-primary text-white font-bold text-sm px-4 py-2.5 rounded-full hover:brightness-110 transition">
+                  Donate Now
+                </a>
+              </div>
+            </div>
+          )}
+        </aside>
+      </div>
     </div>
   </section>
 
@@ -76,6 +117,7 @@ function formatDate(date: Date): string {
     font-size: 1.125rem;
     line-height: 1.85;
     color: var(--color-text-muted);
+    max-width: 48rem;
   }
 
   .blog-content h1 {

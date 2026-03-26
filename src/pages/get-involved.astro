@@ -1,38 +1,6 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import FosterDogCard from '../components/FosterDogCard.astro';
-import fs from 'node:fs';
-import path from 'node:path';
-
-// Auto-discover foster dogs from /public/images/foster-dogs/
-const fosterDir = path.join(process.cwd(), 'public/images/foster-dogs');
-let fosterDogs: { name: string; imageSrc: string; detail?: string }[] = [];
-
-if (fs.existsSync(fosterDir)) {
-  const files = fs.readdirSync(fosterDir)
-    .filter((f: string) => f.endsWith('.webp'))
-    .sort((a: string, b: string) => a.localeCompare(b));
-
-  fosterDogs = files.map((f: string) => {
-    const base = f.replace('.webp', '');
-    // Naming: foster-name_detail-detail.webp
-    // e.g. foster-doby_11yr-neutered-male-scottish-terrier-32lbs.webp
-    // Split on first underscore only: name vs detail
-    const withoutPrefix = base.replace(/^foster-/, '');
-    const underscoreIdx = withoutPrefix.indexOf('_');
-    const rawName = underscoreIdx > -1 ? withoutPrefix.slice(0, underscoreIdx) : withoutPrefix;
-    const rawDetail = underscoreIdx > -1 ? withoutPrefix.slice(underscoreIdx + 1) : undefined;
-    const name = rawName.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    // Replace hyphens with spaces, add mid-dots between detail segments for readability
-    // e.g. "11yr-neutered-male-scottish-terrier-32lbs" → "11 yr · Neutered male · Scottish terrier · 32 lbs"
-    const detail = rawDetail
-      ?.replace(/-/g, ' ')
-      .replace(/(\d+)\s*(yr|mo|lbs)/g, '$1 $2')
-      .replace(/^(\S)/, (_: string, c: string) => c.toUpperCase());
-    return { name, imageSrc: `/images/foster-dogs/${f}`, detail };
-  });
-}
 ---
 
 <Layout title="Get Involved | Aloha Animal Outreach" description="Foster, volunteer, or donate supplies to help Oʻahu's most vulnerable pets.">
@@ -54,118 +22,26 @@ if (fs.existsSync(fosterDir)) {
   <!-- Foster -->
   <section class="py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div>
           <span class="text-primary font-semibold text-sm uppercase tracking-wider">Foster</span>
           <h2 class="font-display text-3xl md:text-4xl font-bold mt-2 mb-6">Open Your Home, Save a Life</h2>
           <div class="space-y-4 text-text-muted leading-relaxed">
             <p>
-              Fostering is the bridge between the street and a forever home. When a dog needs a home, we connect them with our network of trusted rescue partners who find fosters, manage the adoption process, and support new families every step of the way. You apply through them — we make the introduction.
+              Fostering is the bridge between the street and a forever home. We work with a network of trusted rescue partners on Oʻahu to place dogs in loving foster homes while they wait for their forever families.
             </p>
             <p>
-              <strong class="text-text">Our rescue partners:</strong> <a href="https://www.furangelfoundation.org/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Fur Angel Foundation</a>, <a href="https://www.k9kokua.org/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">K9 Kōkua</a>, <a href="https://www.katcharities.org/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">KAT Charities</a>, <a href="https://www.pawsofhawaii.org/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">PAWS of Hawaiʻi</a>, <a href="https://poidogsandpopoki.org/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Poi Dogs &amp; Popoki</a>, <a href="https://oahuspca.org/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Oahu SPCA</a>, <a href="https://www.hawaiianhumane.org/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Hawaiian Humane Society</a>, <a href="https://www.hawaiidogfoundation.org/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Hawaii Dog Foundation</a>, <a href="https://www.alohailiorescue.com/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Aloha ʻIlio Rescue</a>, and <a href="https://www.thehawaiispca.org/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Hawaii SPCA</a>.
+              All supplies, food, and veterinary care are provided — you just bring the love. Learn more about how it works, meet dogs waiting for a foster, and apply.
             </p>
-            <p><strong class="text-text">How it works:</strong></p>
-            <ul class="list-disc list-inside space-y-2">
-              <li>Our rescue partner handles the application process — whether you have a specific dog in mind or want help finding the right fit</li>
-              <li>All supplies, food, and veterinary care are provided</li>
-              <li>You'll have ongoing support to help your foster dog thrive</li>
-              <li>When the time comes, our partner helps find the right forever home</li>
-            </ul>
           </div>
-          <button class="inquiry-toggle inline-block mt-6 bg-primary text-white font-bold px-6 py-3 rounded-full hover:brightness-110 transition" data-form="foster-form">
-            Apply to Foster
-          </button>
+          <a href="/foster" class="inline-block mt-6 bg-primary text-white font-bold px-6 py-3 rounded-full hover:brightness-110 transition">
+            Meet Our Foster Dogs
+          </a>
         </div>
         <img src="/images/outreach-01.webp" alt="AAO volunteers during community outreach" class="rounded-2xl object-cover w-full" style="aspect-ratio: 4/3;" loading="lazy" />
       </div>
-
-      <!-- Foster Inquiry Form -->
-      <div id="foster-form" class="inquiry-form hidden mt-12 max-w-2xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-sm border border-dark/10 p-8">
-          <h3 class="font-display text-xl font-semibold mb-6">Foster Inquiry</h3>
-          <form name="foster-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="space-y-5">
-            <input type="hidden" name="form-name" value="foster-inquiry" />
-            <input type="hidden" name="Form" value="Foster Inquiry" />
-            <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label for="foster-name" class="block text-sm font-semibold mb-1">Name</label>
-                <input type="text" id="foster-name" name="name" required
-                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
-              </div>
-              <div>
-                <label for="foster-email" class="block text-sm font-semibold mb-1">Email</label>
-                <input type="email" id="foster-email" name="email" required
-                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label for="foster-phone" class="block text-sm font-semibold mb-1">Phone <span class="text-text-muted font-normal">(optional)</span></label>
-                <input type="tel" id="foster-phone" name="phone"
-                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
-              </div>
-              <div>
-                <label for="foster-location" class="block text-sm font-semibold mb-1">Location / Area</label>
-                <input type="text" id="foster-location" name="location" placeholder="e.g. Kailua, Honolulu" required
-                  class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
-              </div>
-            </div>
-
-            <div>
-              <label for="foster-living" class="block text-sm font-semibold mb-1">Living situation</label>
-              <select id="foster-living" name="living-situation" required
-                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white focus:outline-none focus:ring-2 focus:ring-primary">
-                <option value="" disabled selected>Select one</option>
-                <option value="house-yard">House with yard</option>
-                <option value="house-no-yard">House without yard</option>
-                <option value="apartment">Apartment / Condo</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="foster-pets" class="block text-sm font-semibold mb-1">Do you have other pets?</label>
-              <input type="text" id="foster-pets" name="other-pets" placeholder="e.g. One cat, no dogs"
-                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary" />
-            </div>
-
-            <div>
-              <label for="foster-message" class="block text-sm font-semibold mb-1">Anything else you'd like us to know?</label>
-              <textarea id="foster-message" name="message" rows="3"
-                class="w-full px-4 py-3 rounded-lg border border-dark/15 text-anchor bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary resize-y"></textarea>
-            </div>
-
-            <button type="submit"
-              class="bg-primary text-white font-bold px-8 py-3 rounded-full hover:brightness-110 transition">
-              Submit Foster Inquiry
-            </button>
-          </form>
-        </div>
-      </div>
     </div>
   </section>
-
-  <!-- Dogs That Need a Foster -->
-  {fosterDogs.length > 0 && (
-    <section class="py-20 bg-bg">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <span class="text-primary font-semibold text-sm uppercase tracking-wider">Urgent Need</span>
-          <h2 class="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">Dogs Looking for a Foster Home</h2>
-          <p class="text-text-muted max-w-2xl mx-auto">These dogs are waiting for someone to open their home. Could that be you?</p>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {fosterDogs.map(dog => (
-            <FosterDogCard name={dog.name} imageSrc={dog.imageSrc} detail={dog.detail} />
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
 
   <!-- Volunteer -->
   <section class="py-20 bg-white">

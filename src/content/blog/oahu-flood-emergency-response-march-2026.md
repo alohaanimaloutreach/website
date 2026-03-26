@@ -9,11 +9,19 @@ tags: [emergency, flood-response, community, partnerships]
 
 This past week, severe flooding devastated communities across Oʻahu. Families were displaced, camps were washed out, and animals were left without food, shelter, or their owners. Our team didn't wait — we loaded up and headed out.
 
-![AAO volunteer loading supplies into vehicle for flood relief distribution](/images/blog/storm-response-volunteer.webp)
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: 2rem 0;">
+  <img src="/images/blog/storm-response-loading.webp" alt="Vehicle packed with dog food for distribution" style="width: 100%; height: 220px; object-fit: cover; border-radius: 0.75rem; margin: 0;" />
+  <img src="/images/blog/storm-response-cart.webp" alt="AAO volunteer pushing cart of dog food" style="width: 100%; height: 220px; object-fit: cover; border-radius: 0.75rem; margin: 0;" />
+</div>
 
 ## The Response
 
-Over the weekend, our volunteers hit the ground running. In partnership with incredible organizations across the island, we distributed close to **2,500 lbs of dog food** along with leashes, collars, kennels, and other essential supplies to communities impacted by the flooding.
+Over the weekend, our volunteers hit the ground running. In partnership with incredible organizations across the island, we distributed food, leashes, collars, kennels, and other essential supplies to communities impacted by the flooding.
+
+<div style="margin: 2.5rem 0; padding: 2rem; background: linear-gradient(135deg, #6ea832 0%, #5a8c28 100%); border-radius: 1rem; text-align: center; color: white;">
+  <div style="font-size: 3.5rem; font-weight: 800; line-height: 1; margin-bottom: 0.25rem;">~2,500 lbs</div>
+  <div style="font-size: 1.1rem; opacity: 0.9;">of dog food distributed across Oʻahu in one weekend</div>
+</div>
 
 We covered a lot of ground, reaching animals and families at:
 
@@ -28,8 +36,6 @@ We covered a lot of ground, reaching animals and families at:
 - White Plains
 - Waiʻanae Boat Harbor
 
-![Cart loaded with bags of pet food for flood relief](/images/blog/storm-response-cart.webp)
-
 ## Community and Partnership
 
 None of this was possible alone. The outpouring of support from our community and partner organizations was overwhelming:
@@ -39,8 +45,6 @@ None of this was possible alone. The outpouring of support from our community an
 - **Fur Angel Foundation** provided another 200 lbs of food
 
 Beyond food, community members came together to donate leashes, collars, kennels, and anything else they could. The number of people who stepped up to help in a time of crisis was truly incredible.
-
-![Supplies stacked and ready for distribution](/images/blog/storm-response-supplies.webp)
 
 ## The Work Continues
 
