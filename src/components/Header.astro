@@ -39,7 +39,7 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
 ---
 
 {announcement?.text && (
-  <div id="announcement-bar" class="fixed top-0 w-full z-[60] bg-accent text-anchor text-center text-sm font-medium py-2 px-4">
+  <div id="announcement-bar" class="fixed top-0 w-full z-[60] bg-accent text-anchor text-center text-xs sm:text-sm font-medium py-1.5 sm:py-2 px-8 sm:px-4">
     {announcement.link ? (
       <a href={announcement.link} class="hover:underline">
         {announcement.text} &rarr;
@@ -55,10 +55,10 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
 
 <header id="site-header" class:list={[
   'fixed w-full z-50 transition-all duration-300',
-  announcement?.text ? 'top-[36px]' : 'top-0',
+  announcement?.text ? 'top-[30px] sm:top-[36px]' : 'top-0',
   hasDarkHero ? 'bg-transparent' : 'bg-bg shadow-md'
 ]} data-dark-hero={hasDarkHero ? 'true' : 'false'} data-has-announcement={announcement?.text ? 'true' : 'false'}>
-  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-6 md:py-8">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-4 md:py-8">
     <!-- Logo -->
     <a href="/" class="flex-shrink-0">
       {hasDarkHero && whiteLogoSrc ? (
@@ -136,7 +136,7 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
 </header>
 
 <!-- Spacer for pages without dark hero (header won't overlay content) -->
-{!hasDarkHero && <div id="header-spacer" class:list={[announcement?.text ? 'h-[156px] md:h-[172px]' : 'h-[120px] md:h-[136px]']}></div>}
+{!hasDarkHero && <div id="header-spacer" class:list={[announcement?.text ? 'h-[140px] md:h-[172px]' : 'h-[104px] md:h-[136px]']}></div>}
 
 <script>
   const btn = document.getElementById('mobile-menu-btn');
@@ -156,12 +156,12 @@ const hasDarkHero = darkHeroPages.includes(currentPath) || darkHeroPages.include
     announcementBar?.remove();
     const siteHeader = document.getElementById('site-header');
     if (siteHeader) {
-      siteHeader.classList.remove('top-[36px]');
+      siteHeader.classList.remove('top-[30px]', 'sm:top-[36px]');
       siteHeader.classList.add('top-0');
     }
     if (headerSpacer) {
-      headerSpacer.classList.remove('h-[156px]', 'md:h-[172px]');
-      headerSpacer.classList.add('h-[120px]', 'md:h-[136px]');
+      headerSpacer.classList.remove('h-[140px]', 'md:h-[172px]');
+      headerSpacer.classList.add('h-[104px]', 'md:h-[136px]');
     }
   });
 
